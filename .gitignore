@@ -1,4 +1,5 @@
 _wrap/
+.idea/
 log/*
 temp/*
 vendor/*
