@@ -1,0 +1,121 @@
+{block content}
+<div class="forms">
+	<h1 n:block=title>Nástěnka</h1>
+
+	<h2>{$me->getFullName()}</h2>
+
+	<h3>Základní informace</h3>
+	{control frmUser}
+
+	<h3>Změna hesla</h3>
+	{control frmUserPassword}
+
+</div>
+
+
+{if $participation}
+	{if $participation->isRacer()}
+		<div>
+			<h3>Aktuální ročník</h3>
+
+			{define #member}
+			<div>
+				<h4>{$participation->getUser()->getFullNameWithNickname()}</h4>
+				<small>{$participation->getUser()->getEmail()}</small>
+				<div>Foto</div>
+				{if $participation->isPaid()}
+				Zaplaceno =)
+				{else}
+				Nezaplaceno !!!
+				<div>QR kod pro plabu</div>
+				{/if}
+			<div>
+			{/define}
+			<table border="1">
+				<tr>
+					<th colspan="2">Startovní číslo {$participation->getPair()->getStartNumber() ?: '<nepřiděleno>'}</th>
+				</tr>
+				<tr>
+					<td>
+						{include #member participation=>$participation}
+					</td>
+					<td>
+						{include #member participation=>$participation->getPair()->getOtherOne($participation)}
+					</td>
+				</tr>
+			</table>
+		</div>
+	{else}
+		V závodu jste registrovaný jako ServisTým.
+	{/if}
+{else}
+	<h3>Vytvoř nový pár pro aktuální ročník</h3>
+	{control frmPairSendInvitation}
+{/if}
+
+<h3>Minulé ročníky</h3>
+
+{define #member_small}
+<div>
+	<h5>{$participation->getUser()->getFullNameWithNickname()}</h5>
+	<small>{$participation->getUser()->getEmail()}</small>
+	<div>male Foto</div>
+<div>
+{/define}
+
+{foreach $me->getParticipations() as $p}
+	<h4>ročník {$p->getRace()->getYear()} v {$p->getRace()->getLocation()}</h4>
+
+	<table border="1">
+		<tr>
+			<th colspan="2">Startovní číslo {$p->getPair()->getStartNumber() ?: '<nepřiděleno>'}</th>
+		</tr>
+		<tr>
+			<td>
+				{include #member_small participation=>$p}
+			</td>
+			<td>
+				{include #member_small participation=>$p->getPair()->getOtherOne($p)}
+			</td>
+		</tr>
+	</table>
+
+{/foreach}
+
+
+
+<div class="notifications">
+	{if $me->hasUnreadNotification()}<strong>Máte nepřečtené notifikace</strong>{/if}
+
+	<ul n:ifcontent>
+	{foreach $notifications as $notification}
+		<li>
+			<strong n:tag-if="$notification->isUnread()">
+				{if $notification->isType($notification::TYPE_INVITATION)}
+					{$notification->getSender()->getFullNameWithNickname()} by s tebou rád vytvořil závodní dvojici!<br />
+					<a n:href="acceptInvitation! $notification->getId()">Přijmout</a> | <a n:href="rejectInvitation! $notification->getId()">Odmítnout</a>
+				{elseif $notification->isType($notification::TYPE_INVITATION_ACCEPT)}
+					{$notification->getSender()->getFullNameWithNickname()} přijal tvoji nabídku na vytvoření dvojice!<br />
+					<a n:href="markAsRead! $notification->getId()">Beru na vědomí</a>
+				{elseif $notification->isType($notification::TYPE_INVITATION_REJECT)}
+					{$notification->getSender()->getFullNameWithNickname()} odmítnul tvoji nabídku na vytvoření dvojice =(<br />
+					<a n:href="markAsRead! $notification->getId()">Beru na vědomí</a>
+				{elseif $notification->isType($notification::TYPE_MESSAGE)}
+					Nová zpráva od {if $notification->getSender()}{$notification->getSender()->getFullNameWithNickname()}{else}Informační systém{/if}
+				{/if}
+				<div><small><em>{$notification->getCreatedAt()|date}</em></small></div>
+			</strong>
+		</li>
+	{/foreach}
+	</ul>
+</div>
+
+{/block}
+
+{block scripts}
+{include parent}
+{/block}
+
+
+{block head}
+{/block}

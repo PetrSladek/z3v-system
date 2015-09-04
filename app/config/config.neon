@@ -1,0 +1,60 @@
+#
+# WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
+# http://nette.org/security-warning
+#
+parameters:
+
+
+php:
+	date.timezone: Europe/Prague
+
+extensions:
+	console: Kdyby\Console\DI\ConsoleExtension
+	events: Kdyby\Events\DI\EventsExtension
+	annotations: Kdyby\Annotations\DI\AnnotationsExtension
+	doctrine: Kdyby\Doctrine\DI\OrmExtension
+
+doctrine:
+	user: # in config.local.neon
+	password: # in config.local.neon
+	dbname: # in config.local.neon
+	metadata:
+		App: %appDir%
+
+
+application:
+	errorPresenter: Error
+	mapping:
+		*: App\*Module\Presenters\*Presenter
+
+
+session:
+	expiration: 14 days
+latte:
+	macros:
+		- Nextras\Forms\Bridges\Latte\Macros\BS3InputMacros
+forms:
+	messages:
+		EQUAL: 'Prosím vyplňte %s.'
+		EMAIL: '%label musí být ve správném formátu'
+		FILLED: 'Prosím vyplňte pole %label.'
+		FLOAT: 'Pole %label musí být desetinné číslo.'
+		NUMERIC: 'Pole %label musí být celé číslo.'
+		MIN_LENGTH: 'Délka textu v políčku musí být alespoň %d znaků.'
+
+services:
+	- App\Model\Authenticator
+	- App\Forms\SignFormFactory
+	- App\Forms\IUserFormFactory
+	- App\Forms\IUserPasswordFormFactory
+	- App\Forms\IUserRegistrationFormFactory
+	- App\Forms\IPairSendInvitationFormFactory
+
+	- App\Services\Races
+	- App\Services\Notifications
+
+
+	router: App\RouterFactory::createRouter
+	entityHydrator: Zend\Stdlib\Hydrator\ClassMethods
+	inflection: \Inflection
+
