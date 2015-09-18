@@ -63,6 +63,13 @@ class Pair
      */
     protected $chipId;
 
+    /**
+     * Poznámka
+     * @ORM\Column(type="text", nullable=TRUE)
+     * @var string
+     */
+    protected $internalNote;
+
 
     public function __construct(Race $race)
     {
@@ -74,6 +81,12 @@ class Pair
         $this->members->add( $participation );
     }
 
+    /**
+     * @return array|RacerParticipation[]
+     */
+    public function getMembers() {
+        return $this->members->toArray();
+    }
 
     /**
      * Vrati ostatni cleny ve starovní dvojici (tedy jen jednoho)
@@ -82,10 +95,10 @@ class Pair
      */
     protected function getOthers(RacerParticipation $participation)
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->neq('id', $participation->getId()));
+        $criteria = Criteria::create()->where( Criteria::expr()->neq('id', $participation->getId()) );
         return $this->members->matching($criteria);
-
     }
+
 
     /**
      * Vrátí druhého z dvojice
@@ -96,6 +109,51 @@ class Pair
         return $this->getOthers($participation)->first();
     }
 
+
+    /**
+     * Vrátí účast uživatele v této dvojici
+     * @param User $user
+     * @return RacerParticipation
+     */
+    public function getUserParticipation(User $user)
+    {
+        $criteria = Criteria::create()->where( Criteria::expr()->neq('user', $user) );
+        $participation = $this->members->matching($criteria)->first();
+        if(!$participation)
+            throw new \InvalidArgumentException("User is not in this pair!");
+        return $participation;
+    }
+
+    /**
+     * Je uživatel členem této dvojice?
+     * @param User $user
+     * @return bool
+     */
+    public function isMember(User $user)
+    {
+        $criteria = Criteria::create()->where( Criteria::expr()->neq('user', $user) );
+        return !$this->members->matching($criteria)->isEmpty();
+
+    }
+
+
+
+    /**
+     * Vrátí prvního z dvojice (ten kdo ji zakládal)
+     * @return RacerParticipation|null
+     */
+    public function getFirstMember() {
+        return $this->members->get(0);
+    }
+
+
+    /**
+     * Vrátí druhého z dvojice (ten kdo pozvání přijal)
+     * @return RacerParticipation|null
+     */
+    public function getSecondMember() {
+        return $this->members->get(1);
+    }
 
 
 
@@ -125,36 +183,14 @@ class Pair
     }
 
     /**
-     * @return PairMember
+     * @return Race
      */
-    public function getMember1()
+    public function getRace()
     {
-        return $this->member1;
+        return $this->race;
     }
 
-    /**
-     * @param PairMember $member1
-     */
-    public function setMember1($member1)
-    {
-        $this->member1 = $member1;
-    }
 
-    /**
-     * @return PairMember
-     */
-    public function getMember2()
-    {
-        return $this->member2;
-    }
-
-    /**
-     * @param PairMember $member2
-     */
-    public function setMember2($member2)
-    {
-        $this->member2 = $member2;
-    }
 
     /**
      * @return boolean
@@ -218,6 +254,22 @@ class Pair
     public function setChipId($chipId)
     {
         $this->chipId = $chipId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInternalNote()
+    {
+        return $this->internalNote;
+    }
+
+    /**
+     * @param string $internalNote
+     */
+    public function setInternalNote($internalNote)
+    {
+        $this->internalNote = $internalNote;
     }
 
 

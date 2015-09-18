@@ -67,12 +67,19 @@ abstract class BaseEntityForm extends Nette\Application\UI\Control
 
     protected abstract function hydrate($values);
 
-    protected abstract function extract();
+    /**
+     * Nainstancuje novou entitu
+     * @return mixed
+     */
+    protected function constructNewEntity($values)
+    {
+        return new $this->entityClass();
+    }
 
     public function formSuccess(Nette\Application\UI\Form $form, $values)
     {
         if(!$this->entity) {
-            $this->entity = new $this->entityClass();
+            $this->entity = $this->constructNewEntity($values);
             $this->em->persist($this->entity);
         }
 

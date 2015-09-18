@@ -121,6 +121,12 @@ class User
         $this->managedCheckpoints = new ArrayCollection();
     }
 
+
+    public function addParticipation(Participation $participation)
+    {
+        return $this->participations->add($participation);
+    }
+    
     /**
      * Vrati vsechny ucasti tohoto uzivetele na jednotlivých závodech
      * @return Participation[]

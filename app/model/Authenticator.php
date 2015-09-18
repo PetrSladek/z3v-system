@@ -51,11 +51,11 @@ class Authenticator extends Object implements IAuthenticator
         /** @var User $user */
 		$user = $repo->findOneBy(['email'=>$email]);
 		if (!$user) {
-			throw new AuthenticationException('Tento email není zaregistrovaný.', self::IDENTITY_NOT_FOUND);
-
+            throw new AuthenticationException('Tento email není zaregistrovaný.', self::IDENTITY_NOT_FOUND);
+        } elseif($user->getPassword() === strtoupper(hash('sha256', $password))) { // stare heslo kvuli z5ne kompatibilitě
+            $user->setPassword( $this->hash($password) );
 		} elseif (!$this->verify($password, $user->getPassword())) {
 			throw new AuthenticationException('Špatné heslo.', self::INVALID_CREDENTIAL);
-
 		} elseif ($this->needsRehash($user->getPassword())) {
 			$user->setPassword($this->hash($password));
 		}
@@ -63,7 +63,7 @@ class Authenticator extends Object implements IAuthenticator
 		$user->setLastLogin(new DateTime());
 		$this->em->flush();
 
-		// radsi vztahuju cerstvy data z DB vzdy na zacatku requestu
+		// radsi vytahuju cerstvy data z DB vzdy na zacatku requestu (kvuli zmenam v administraci a tak)
 		return $user->toIdentity();
 	}
 

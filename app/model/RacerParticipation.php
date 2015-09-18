@@ -17,7 +17,7 @@ class RacerParticipation extends Participation
     /**
      * Ve kterém páru
      * @ORM\ManyToOne(targetEntity="Pair", inversedBy="members")
-     * @ORM\JoinColumn(name="pair_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="pair_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Pair
      */
     protected $pair;
@@ -40,11 +40,14 @@ class RacerParticipation extends Participation
      * RacerParticipation constructor.
      * @param Pair $pair
      */
-    public function __construct(Race $race, User $user, Pair $pair = null)
+    public function __construct(Race $race, User $user, Pair $pair)
     {
         $this->race = $race;
         $this->pair = $pair;
         $this->user = $user;
+
+        $pair->addMember($this);
+        $user->addParticipation($this);
     }
 
     /**
@@ -53,14 +56,6 @@ class RacerParticipation extends Participation
     public function getPair()
     {
         return $this->pair;
-    }
-
-    /**
-     * @param Pair $pair
-     */
-    public function setPair(Pair $pair = null)
-    {
-        $this->pair = $pair;
     }
 
 

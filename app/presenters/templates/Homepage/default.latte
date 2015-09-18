@@ -100,6 +100,13 @@
 				{elseif $notification->isType($notification::TYPE_INVITATION_REJECT)}
 					{$notification->getSender()->getFullNameWithNickname()} odmítnul tvoji nabídku na vytvoření dvojice =(<br />
 					<a n:href="markAsRead! $notification->getId()">Beru na vědomí</a>
+				{elseif $notification->isType($notification::TYPE_PAIR_CANCEL)}
+					{if $notification->getSender()}
+						{$notification->getSender()->getFullNameWithNickname()} zrušil vaši dvojici. Nyní se s tebou ná Z3V nepočítá.
+					{else}
+						Tvoje dvojice s {$notification->getMessage()} byla zrušena vedením závodu. Nyní se s tebou ná Z3V nepočítá.
+					{/if}
+					<a n:href="markAsRead! $notification->getId()">Beru na vědomí</a>
 				{elseif $notification->isType($notification::TYPE_MESSAGE)}
 					Nová zpráva od {if $notification->getSender()}{$notification->getSender()->getFullNameWithNickname()}{else}Informační systém{/if}
 				{/if}

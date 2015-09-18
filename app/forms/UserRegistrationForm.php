@@ -11,15 +11,13 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
-
+/**
+ * Class UserRegistrationForm
+ * @package App\Forms
+ * @property $entity User|null
+ */
 class UserRegistrationForm extends BaseEntityForm
 {
-
-
-    /**
-     * @var User|null
-     */
-    protected $entity;
 
     /**
      * @var string Class name of entity

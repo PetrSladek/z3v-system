@@ -17,6 +17,7 @@ class Notification
     const TYPE_INVITATION = 'invitation';
     const TYPE_INVITATION_ACCEPT = 'invitation_accept';
     const TYPE_INVITATION_REJECT = 'invitation_reject';
+    const TYPE_PAIR_CANCEL = 'pair_cancel';
     const TYPE_MESSAGE = 'message';
 
 
@@ -76,11 +77,11 @@ class Notification
     /**
      * Notification constructor.
      * @param $race
-     * @param User $sender
+     * @param User|null $sender
      * @param User $recipient
      * @param string $type
      */
-    public function __construct($race, User $sender, User $recipient, $type = self::TYPE_INVITATION)
+    public function __construct($race, User $sender = null, User $recipient, $type = self::TYPE_INVITATION)
     {
         $this->race = $race;
         $this->sender = $sender;
@@ -177,7 +178,7 @@ class Notification
     }
 
     /**
-     * @return User
+     * @return User|null
      */
     public function getSender()
     {

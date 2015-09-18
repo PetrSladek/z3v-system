@@ -18,8 +18,15 @@ doctrine:
 	user: # in config.local.neon
 	password: # in config.local.neon
 	dbname: # in config.local.neon
+	namespaceAlias:
+	    app: App\Model
 	metadata:
 		App: %appDir%
+#	metadataCache: apc
+#	queryCache: apc
+
+#annotations:
+#	cache: apc
 
 
 application:
@@ -49,8 +56,11 @@ services:
 	- App\Forms\IUserPasswordFormFactory
 	- App\Forms\IUserRegistrationFormFactory
 	- App\Forms\IPairSendInvitationFormFactory
+	- App\Forms\IPairFormFactory
+	- App\Forms\IPairAddFormFactory
 
 	- App\Services\Races
+	- App\Services\Pairs
 	- App\Services\Notifications
 
 

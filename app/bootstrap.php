@@ -18,14 +18,18 @@ $configurator->addConfig(__DIR__ . '/config/config.local.neon');
 
 
 
-\Nette\Forms\Container::extensionMethod('addDatePicker', function(\Nette\Forms\Container $container, $name, $label = NULL) {
+\Nette\Forms\Container::extensionMethod('addDatePicker', function(\Nette\Forms\Container $container, $name, $label = null) {
     return $container[$name] = new \Nextras\Forms\Controls\DatePicker($label);
 });
-\Nette\Forms\Container::extensionMethod('addDateTimePicker', function(\Nette\Forms\Container $container, $name, $label = NULL) {
+\Nette\Forms\Container::extensionMethod('addDateTimePicker', function(\Nette\Forms\Container $container, $name, $label = null) {
     return $container[$name] = new \Nextras\Forms\Controls\DateTimePicker($label);
 });
-\Nette\Forms\Container::extensionMethod('addTypeahead', function(\Nette\Forms\Container $container, $name, $label = NULL, $callback = NULL) {
+\Nette\Forms\Container::extensionMethod('addTypeahead', function(\Nette\Forms\Container $container, $name, $label = null, $callback = null) {
     $control = new \Nextras\Forms\Controls\Typeahead($label, $callback);
+    return $container[$name] = $control;
+});
+\Nette\Forms\Container::extensionMethod('addSelect2', function(\Nette\Forms\Container $container, $name, $label = null, $ajaxUrl = null) {
+    $control = new \App\Forms\Controls\Select2($label, $ajaxUrl);
     return $container[$name] = $control;
 });
 

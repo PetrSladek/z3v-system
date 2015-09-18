@@ -116,7 +116,10 @@ class Address
         $this->country = $country;
     }
 
-
+    public function __toString()
+    {
+        return sprintf("%s %s %s (%s)", $this->street, $this->city, $this->postalCode, $this->country);
+    }
 
 
 }

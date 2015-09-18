@@ -9,14 +9,13 @@ use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 
 
+/**
+ * Class UserForm
+ * @package App\Forms
+ * @property $entity User|null
+ */
 class UserForm extends BaseEntityForm
 {
-
-
-    /**
-     * @var User|null
-     */
-    protected $entity;
 
     /**
      * @var string Class name of entity

@@ -22,11 +22,16 @@ class Notifications extends Object
     private $em;
     private $repository;
 
-    public function __construct(EntityManager $em)
+    /**
+     * @var Pairs
+     */
+    private $pairs;
+
+    public function __construct(EntityManager $em, Pairs $pairs)
     {
         $this->em = $em;
         $this->repository = $em->getRepository(Notification::class);
-        // $this->articles = $em->getRepository(App\Article::getClassName()); // for older PHP
+        $this->pairs = $pairs;
     }
 
 
@@ -53,9 +58,10 @@ class Notifications extends Object
 
     public function rejectInvitation(User $recipient, Notification $notification) {
 
-        if(!$notification->isType(Notification::TYPE_INVITATION))
+        if (!$notification->isType(Notification::TYPE_INVITATION))
             throw new \InvalidArgumentException("Wrong notification type");
-        if($notification->getRecipient() != $recipient)
+
+        if ($notification->getRecipient() != $recipient)
             throw new \InvalidArgumentException("Wrong recipient");
 
         // oznacim notifikaci jako přečtenou
@@ -71,9 +77,10 @@ class Notifications extends Object
 
     public function acceptInvitation(User $recipient, Notification $notification) {
 
-        if(!$notification->isType(Notification::TYPE_INVITATION))
+        if (!$notification->isType(Notification::TYPE_INVITATION))
             throw new \InvalidArgumentException("Wrong notification type");
-        if($notification->getRecipient() != $recipient)
+
+        if ($notification->getRecipient() != $recipient)
             throw new \InvalidArgumentException("Wrong recipient");
 
         // Oznacim notifikaci jako přečtenou
@@ -85,40 +92,26 @@ class Notifications extends Object
         $recipient = $notification->getRecipient();
 
         // Ověřím jestli se kolega může přihlásit do závodu
-        if($p = $sender->getParticipationInRace($race)) {
+        if ($p = $sender->getParticipationInRace($race))
+        {
             if($p instanceof ServiceteamParticipation)
                 throw new \RuntimeException($sender->getFullNameWithNickname() . " už se bohužel do závodu přihásil jako Servisák");
+
             if($p instanceof RacerParticipation)
                 throw new \RuntimeException($sender->getFullNameWithNickname() . " už se bohužel do závodu přihásil ve dvojici s někým jiným");
         }
 
         // Ověřím jestli já se můžu přihlásit do závodu
-        if($p = $recipient->getParticipationInRace($race)) {
+        if ($p = $recipient->getParticipationInRace($race))
+        {
             if($p instanceof ServiceteamParticipation)
                 throw new \RuntimeException("Už jsi se do závodu přihásil jako Servisák, nemůžete být zárověň závodník");
+
             if($p instanceof RacerParticipation)
                 throw new \RuntimeException("Už jsi ve dvojici s někým jiným. Nejprve musíš stávající dvojici zrušit");
         }
 
-        // vytvořím Pár
-        $pair = new Pair($notification->getRace());
-        $this->em->persist($pair)->flush();
-
-        // Přidám mu prvního zavodnika
-        $participation = new RacerParticipation($race, $sender, $pair);
-        $this->em->persist($participation);
-
-        // jen pro sychr
-        $pair->addMember($participation);
-        $sender->addParticipation($participation);
-
-        // Přidám mu druhyho zavodnika
-        $participation = new RacerParticipation($race, $recipient, $pair);
-        $this->em->persist($participation);
-
-        // jen pro sychr
-        $pair->addMember($participation);
-        $recipient->addParticipation($participation);
+        $this->pairs->createPair($race, $sender, $recipient);
 
         // pošlu notifikaci odesílateli o tom, že byla pozvánka přijata
         $reject = new Notification($race, $recipient, $sender, Notification::TYPE_INVITATION_ACCEPT);

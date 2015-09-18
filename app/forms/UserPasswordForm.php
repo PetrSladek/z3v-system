@@ -11,26 +11,23 @@ use Nette;
 use Nette\Application\UI\Form;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
-
+/**
+ * Class UserPasswordForm
+ * @package App\Forms
+ * @property $entity User|null
+ */
 class UserPasswordForm extends BaseEntityForm
 {
-
-    /**
-     * @var null|User
-     */
-    protected $entity;
 
     /**
      * @var string Class name of entity
      */
     protected $entityClass = User::class;
 
-
     /**
      * @var Authenticator
      */
     protected $authenticator;
-
 
 
     public function __construct(Authenticator $authenticator, EntityManager $em, HydratorInterface $hydrator, $id)

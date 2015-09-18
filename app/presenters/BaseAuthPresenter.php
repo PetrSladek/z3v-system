@@ -4,6 +4,7 @@ namespace App\Presenters;
 
 use Kdyby\Doctrine\EntityManager;
 use App\Model\User;
+use Nette\InvalidStateException;
 
 
 /**
@@ -29,6 +30,11 @@ abstract class BaseAuthPresenter extends BasePresenter
 
         // nactu entitu prihlaseneho uzivatele
         $this->me = $this->em->find(User::class, $this->getUser()->getId());
+        if(!$this->me) {
+            $this->getUser()->logout(true);
+            $this->redirect('Sign:in');
+        }
+
 
         // nactu entitu moji ucasti na tomto rocniku zavodu
         $this->participation = $this->me->getParticipationInRace($this->race);
