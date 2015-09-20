@@ -1,0 +1,79 @@
+{block content}
+
+<h1>Správa ročníků</h1>
+
+<h2>Seznam ročníků</h2>
+{snippet table}
+<table class="table table-striped table-bordered">
+	<thead>
+		<tr>
+			<th>Aktuální</th>
+			<th>Ročník</th>
+			<th>Datum</th>
+			<th>Čas startu</th>
+			<th>Místo</th>
+			<th>Trička (konec úprav)</th>
+			<th>Uzamčen</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+{foreach $races as $race}
+		<tr>
+			<td>
+				{$race->isActual() ? 'Ano' : 'Ne'}
+			</td>
+			<td>
+				{$race->getYear()}
+			</td>
+			<td>
+				{$race->getDate()->format('j.n.Y')}
+			</td>
+			<td n:inner-if="$race->getStartTime()">
+				{$race->getStartTime()->format("H:i")}
+			</td>
+			<td>
+				{$race->getLocation()}
+			</td>
+			<td n:inner-if="$race->getTshirtEndDate()">
+				{$race->getTshirtEndDate()->format('j.n.Y')}
+			</td>
+			<td>
+				{$race->isLocked() ? 'Ano' : 'Ne'}
+			</td>
+			<td>
+				<a class="ajax btn btn-xs btn-default" n:href="setActual! $race->getId()">Označit jako aktuální</a>
+				<a class="ajax btn btn-xs btn-default" n:href="toggleLocked! $race->getId()">{if $race->isLocked()}Odemknout{else}Zamknout{/if}</a>
+
+				{*<a n:href="openModal! $checkpoint->getId()" class="ajax btn btn-xs btn-info">Editovat</a>*}
+				{*<a n:href="remove! $checkpoint->getId()" class="ajax btn btn-xs btn-danger">Smazat</a>*}
+			</td>
+		</tr>
+		{/foreach}
+	</tbody>
+</table>
+{/snippet}
+
+
+{control frmRace}
+{*
+<a n:href="openModal! null" class="ajax btn btn-primary">Přidat stanoviště</a>
+
+<div n:snippet n:inner-if="$renderModal" class="modal fade login-modal" tabindex="-1" role="dialog" aria-labelledby="addCheckpointTitle" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content ajax-overlay">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="addCheckpointTitle">Přidat stanoviště</h4>
+			</div>
+			<div class="modal-body">
+				{control frmCheckpoint}
+			</div>
+			<div class="modal-footer">
+
+			</div>
+		</div>
+	</div>
+</div>*}
+
+{/block}

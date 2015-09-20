@@ -1,79 +1,83 @@
 {block content}
 <h1>Editace aktuálního ročníku</h1>
 
-<table class="table table-stripped table-bordered">
-	<tr>
-		<th>ID</th>
-		<th>Jméno</th>
-		<th>Velikost</th>
-		<th>Telefon</th>
-		<th>E-mail</th>
-		<th>Adresa</th>
-		<th>Zaplaceno</th>
-		<th>Přijeli</th>
-		<th>Číslo</th>
-		<th>Poznámka</th>
-	</tr>
+<table class="table table-tbody-striped table-bordered">
+	<thead>
+		<tr>
+			<th>ID</th>
+			<th>Jméno</th>
+			<th>Velikost</th>
+			<th>Telefon</th>
+			<th>E-mail</th>
+			<th>Adresa</th>
+			<th>Zaplaceno</th>
+			<th>Přijeli</th>
+			<th>Číslo</th>
+			<th>Poznámka</th>
+		</tr>
+	</thead>
 	{foreach $pairs as $pair}
-	<tr>
-		<td rowspan="2">
-			{$pair->getId()}
-		</td>
-		<td>
-			{$pair->getFirstMember()->getUser()->getFullNameWithNickname()}
-		</td>
-		<td>
-			{$pair->getFirstMember()->getUser()->getTshirt()}
-		</td>
-		<td>
-			{$pair->getFirstMember()->getUser()->getPhone()}
-		</td>
-		<td>
-			{$pair->getFirstMember()->getUser()->getEmail()}
-		</td>
-		<td>
-			{$pair->getFirstMember()->getUser()->getAddress()}
-		</td>
-		<td>
-			{$pair->getFirstMember()->isPaid() ? 'ANO' : '-'}
-		</td>
+	<tbody>
+		<tr>
+			<td rowspan="2">
+				{$pair->getId()}
+			</td>
+			<td>
+				{$pair->getFirstMember()->getUser()->getFullNameWithNickname()}
+			</td>
+			<td>
+				{$pair->getFirstMember()->getUser()->getTshirt()}
+			</td>
+			<td>
+				{$pair->getFirstMember()->getUser()->getPhone()}
+			</td>
+			<td>
+				{$pair->getFirstMember()->getUser()->getEmail()}
+			</td>
+			<td>
+				{$pair->getFirstMember()->getUser()->getAddress()}
+			</td>
+			<td>
+				{$pair->getFirstMember()->isPaid() ? 'ANO' : '-'}
+			</td>
 
-		<td rowspan="2">
-			{$pair->isArrived() ? 'ANO' : '-'}
-		</td>
-		<td rowspan="2">
-			{$pair->getStartNumber() ?: 'nepřiřazeno'}
-		</td>
-		<td rowspan="2">
-			{$pair->getInternalNote()}
-		</td>
-		<td rowspan="2">
-			{control "frmPair{$pair->getId()}"}
-		</td>
-		<td rowspan="2">
-			<a n:href="cancelPair! $pair->getId()" onclick="return confirm('Opravdu chcete tomuto páru zrušit účast?');">Smazat účast</a>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			{$pair->getSecondMember()->getUser()->getFullNameWithNickname()}
-		</td>
-		<td>
-			{$pair->getSecondMember()->getUser()->getTshirt()}
-		</td>
-		<td>
-			{$pair->getSecondMember()->getUser()->getPhone()}
-		</td>
-		<td>
-			{$pair->getSecondMember()->getUser()->getEmail()}
-		</td>
-		<td>
-			{$pair->getSecondMember()->getUser()->getAddress()}
-		</td>
-		<td>
-			{$pair->getSecondMember()->isPaid() ? 'ANO' : '-'}
-		</td>
-	</tr>
+			<td rowspan="2">
+				{$pair->isArrived() ? 'ANO' : '-'}
+			</td>
+			<td rowspan="2">
+				{$pair->getStartNumber() ?: 'nepřiřazeno'}
+			</td>
+			<td rowspan="2">
+				{$pair->getInternalNote()}
+			</td>
+			<td rowspan="2">
+				{control "frmPair{$pair->getId()}"}
+			</td>
+			<td rowspan="2">
+				<a n:href="cancelPair! $pair->getId()" class="btn btn-xs btn-danger" onclick="return confirm('Opravdu chcete tomuto páru zrušit účast?');">Smazat účast</a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				{$pair->getSecondMember()->getUser()->getFullNameWithNickname()}
+			</td>
+			<td>
+				{$pair->getSecondMember()->getUser()->getTshirt()}
+			</td>
+			<td>
+				{$pair->getSecondMember()->getUser()->getPhone()}
+			</td>
+			<td>
+				{$pair->getSecondMember()->getUser()->getEmail()}
+			</td>
+			<td>
+				{$pair->getSecondMember()->getUser()->getAddress()}
+			</td>
+			<td>
+				{$pair->getSecondMember()->isPaid() ? 'ANO' : '-'}
+			</td>
+		</tr>
+	</tbody>
 	{/foreach}
 </table>
 

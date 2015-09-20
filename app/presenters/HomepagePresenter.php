@@ -26,7 +26,7 @@ class HomepagePresenter extends BaseAuthPresenter
      * @var IUserPasswordFormFactory
      * @inject
      */
-    public $userPasswordFormFacotry;
+    public $userPasswordFormFactory;
 
     /**
      * @var IPairSendInvitationFormFactory
@@ -55,7 +55,7 @@ class HomepagePresenter extends BaseAuthPresenter
 	}
 
 	/**
-	 * @return UserEntityForm
+	 * @return UserForm
 	 */
 	protected function createComponentFrmUser()
 	{
@@ -72,7 +72,7 @@ class HomepagePresenter extends BaseAuthPresenter
      */
     protected function createComponentFrmUserPassword()
     {
-        $control = $this->userPasswordFormFacotry->create( $this->me->getId() );
+        $control = $this->userPasswordFormFactory->create( $this->me->getId() );
         $control->onSave[] = function($sender, User $entity) {
             $this->flashMessage('Heslo úspěšně změněno', 'success');
             $this->redirect('this');

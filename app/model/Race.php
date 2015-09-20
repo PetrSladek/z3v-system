@@ -6,6 +6,7 @@
 
 namespace App\Model;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,11 +24,19 @@ class Race
     protected $actual = false;
 
     /**
-     * Datum závodu
-     * @ORM\Column(type="datetime")
+     * Datum závodu (začítek víkendu)
+     * @ORM\Column(type="date")
      * @var \DateTime
      */
     protected $date;
+
+    /**
+     * Čas startu
+     * @ORM\Column(type="time", nullable=TRUE)
+     * @var string
+     */
+    protected $startTime;
+
 
     /**
      * Je možné editovat ročník?
@@ -41,14 +50,8 @@ class Race
      * @ORM\Column(type="datetime", nullable=TRUE)
      * @var \DateTime
      */
-    protected $tshirtEnd;
+    protected $tshirtEndDate;
 
-    /**
-     * Čas startu
-     * @ORM\Column(type="time", nullable=TRUE)
-     * @var string
-     */
-    protected $startTime;
 
     /**
      * Umístění, kde? (v Litoměřicích)
@@ -79,18 +82,167 @@ class Race
     /**
      * Stanoviště na tomto závodu
      * @ORM\OneToMany(targetEntity="Checkpoint", mappedBy="race")
+     * @var Collection
      */
     protected $checkpoints;
 
 
+    /**
+     * Race constructor.
+     * @param \DateTime $date
+     */
+    public function __construct(\DateTime $date)
+    {
+        $this->date = $date;
+    }
 
-    public function getYear() {
+
+    /**
+     * @return string
+     */
+    public function getYear()
+    {
         return $this->date->format('Y');
     }
 
-
-    public function getLocation() {
+    /**
+     * @return string
+     */
+    public function getLocation()
+    {
         return $this->location;
     }
+
+
+    /**
+     * @return boolean
+     */
+    public function isActual()
+    {
+        return $this->actual;
+    }
+
+
+    /**
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getStartTime()
+    {
+        return $this->startTime;
+    }
+
+
+    /**
+     * @return boolean
+     */
+    public function isLocked()
+    {
+        return $this->locked;
+    }
+
+
+    /**
+     * @return \DateTime
+     */
+    public function getTshirtEndDate()
+    {
+        return $this->tshirtEndDate;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getNote()
+    {
+        return $this->note;
+    }
+
+
+    /**
+     * Vrátí stanoviště tohoto závodu
+     * @return Checkpoint[]
+     */
+    public function getCheckpoints()
+    {
+        return $this->checkpoints->toArray();
+    }
+
+
+    /**
+     * @param boolean $actual
+     */
+    public function setActual($actual)
+    {
+        $this->actual = $actual;
+    }
+
+
+    /**
+     * @param \DateTime $date
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+    }
+
+
+    /**
+     * @param string $startTime
+     */
+    public function setStartTime($startTime)
+    {
+        $this->startTime = $startTime;
+    }
+
+
+    /**
+     * @param boolean $locked
+     */
+    public function setLocked($locked)
+    {
+        $this->locked = $locked;
+    }
+
+
+    /**
+     * @param \DateTime $tshirtEndDate
+     */
+    public function setTshirtEndDate($tshirtEndDate)
+    {
+        $this->tshirtEndDate = $tshirtEndDate;
+    }
+
+
+    /**
+     * @param string $location
+     */
+    public function setLocation($location)
+    {
+        $this->location = $location;
+    }
+
+
+    /**
+     * @param string $note
+     */
+    public function setNote($note)
+    {
+        $this->note = $note;
+    }
+
+
+
+
+
 
 }

@@ -2,25 +2,29 @@
 
 	<h1>Počet dvojic které se zúčastní závodu a mají již zaplaceno: {=count($pairs)}</h1>
 
-<table border="1">
-	<tr>
-		<th>Přezdívka</th>
-		<th>startovní číslo</th>
-	</tr>
+<table class="table table-tbody-striped table-bordered">
+	<thead>
+		<tr>
+			<th>Přezdívka</th>
+			<th>startovní číslo</th>
+		</tr>
+	</thead>
 	{foreach $pairs as $pair}
-	<tr>
-		<td>
-			{$pair->getFirstMember()->getUser()->getFullNameWithNickname()}
-		</td>
-		<td rowspan="2">
-			{$pair->getStartNumber() ?: 'nepřiřazeno'}
-		</td>
-	</tr>
-	<tr>
-		<td>
-			{$pair->getSecondMember()->getUser()->getFullNameWithNickname()}
-		</td>
-	</tr>
+	<tbody>
+		<tr>
+			<td>
+				{$pair->getFirstMember()->getUser()->getFullNameWithNickname()}
+			</td>
+			<td rowspan="2">
+				{$pair->getStartNumber() ?: 'nepřiřazeno'}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				{$pair->getSecondMember()->getUser()->getFullNameWithNickname()}
+			</td>
+		</tr>
+	</tbody>
 	{/foreach}
 <table>
 

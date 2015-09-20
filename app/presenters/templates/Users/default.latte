@@ -1,0 +1,102 @@
+{block content}
+
+<h1>Správa závodníků</h1>
+
+<h2>Seznam závodníků (celkem: {$total})</h2>
+
+{snippet table}
+<table class="table table-condensed table-tbody-striped table-bordered">
+	<thead>
+		<tr>
+			<th>Příjmení</th>
+			<th>Jméno</th>
+			<th>Přezdívka</th>
+			<th rowspan="3">Adresa</th>
+			<th>Datum narození</th>
+			<th rowspan="3"></th>
+		</tr>
+		<tr>
+			<th colspan="3">E-mail - username</th>
+			<th>Triko</th>
+		</tr>
+		<tr>
+			<th colspan="3">Telefon</th>
+			<th>Stát</th>
+		</tr>
+	</thead>
+	{foreach $users as $user}
+	<tbody>
+		<tr>
+			<td>
+				<strong>{$user->getName()}</strong>
+			</td>
+			<td>
+				<strong>{$user->getSurname()}</strong>
+			</td>
+			<td>
+				<strong>{$user->getNickName()}</strong>
+			</td>
+			<td contenteditable="true">
+				{$user->getAddress()->getStreet()}
+			</td>
+			<td>
+				{$user->getBirthDate()->format('j.n.Y')}
+			</td>
+			<td rowspan="3">
+				{*<a class="ajax btn btn-xs btn-default" n:href="setActual! $race->getId()">Označit jako aktuální</a>
+				<a class="ajax btn btn-xs btn-default" n:href="toggleLocked! $race->getId()">{if $race->isLocked()}Odemknout{else}Zamknout{/if}</a>
+
+				<a n:href="openModal! $checkpoint->getId()" class="ajax btn btn-xs btn-info">Editovat</a>
+				<a n:href="remove! $checkpoint->getId()" class="ajax btn btn-xs btn-danger">Smazat</a>*}
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				{$user->getEmail()}
+			</td>
+			<td>
+				{$user->getAddress()->getCity()}
+			</td>
+			<td>
+				{$user->getTshirt()}
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				{$user->getPhone()}
+			</td>
+			<td>
+				{$user->getAddress()->getPostalCode()}
+			</td>
+			<td>
+				{$user->getAddress()->getCountry()}
+			</td>
+		</tr>
+	</tbody>
+	{/foreach}
+</table>
+{/snippet}
+
+
+{*{control frmRace}*}
+{*
+<a n:href="openModal! null" class="ajax btn btn-primary">Přidat stanoviště</a>
+
+<div n:snippet n:inner-if="$renderModal" class="modal fade login-modal" tabindex="-1" role="dialog" aria-labelledby="addCheckpointTitle" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content ajax-overlay">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="addCheckpointTitle">Přidat stanoviště</h4>
+			</div>
+			<div class="modal-body">
+				{control frmCheckpoint}
+			</div>
+			<div class="modal-footer">
+
+			</div>
+		</div>
+	</div>
+</div>*}
+
+{/block}

@@ -50,6 +50,7 @@ abstract class BaseEntityForm extends Nette\Application\UI\Control
 
         if($id) {
             $this->entity = $this->em->find($this->entityClass, $id);
+
             if(!$this->entity)
                 throw new EntityNotFoundException;
         }
@@ -85,9 +86,11 @@ abstract class BaseEntityForm extends Nette\Application\UI\Control
 
         $this->hydrate($values);
 
-        try {
+        try
+        {
             $this->em->flush();
-        } catch (\Exception $e) {
+        }
+        catch (\Exception $e) {
             if($e->getPrevious() && preg_match( "/Duplicate entry '(?P<value>.+)' for key '(?P<key>.+)'/i",  $e->getPrevious()->getMessage(), $match ) )
                 $form['email']->addError("E-mail {$match['value']} už je jednou zaregistroavný. Nemůžete ho použít znovu.");
             else

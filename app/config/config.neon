@@ -58,11 +58,13 @@ services:
 	- App\Forms\IPairSendInvitationFormFactory
 	- App\Forms\IPairFormFactory
 	- App\Forms\IPairAddFormFactory
+	- App\Forms\ICheckpointFormFactory
+	- App\Forms\IRaceFormFactory
 
 	- App\Services\Races
 	- App\Services\Pairs
 	- App\Services\Notifications
-
+	- App\Services\Users
 
 	router: App\RouterFactory::createRouter
 	entityHydrator: Zend\Stdlib\Hydrator\ClassMethods
