@@ -1,0 +1,60 @@
+<?php
+/**
+ * @project: z3v-system
+ * @author: Petr Sládek <petr.sladek@skaut.cz>
+ */
+
+namespace App\Listeners;
+
+use App\Model\RacerParticipation;
+use App\Services\Pairs;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Events;
+use Kdyby\Events\EventArgs;
+use Kdyby\Events\Subscriber;
+use Nette\Object;
+
+class MemberPaymentListener extends Object implements Subscriber
+{
+    /**
+     * @var Pairs
+     */
+    private $pairs;
+
+
+
+    /**
+     * MemberPaymentListener constructor.
+     * @param Pairs $pairs
+     */
+    public function __construct(Pairs $pairs)
+    {
+        $this->pairs = $pairs;
+    }
+
+
+    public function getSubscribedEvents()
+    {
+        return [Events::postUpdate];
+    }
+
+    public function postUpdate(LifecycleEventArgs  $args)
+    {
+
+        if ($args->getEntity() instanceof RacerParticipation) {
+            /** @var RacerParticipation $member */
+            $member = $args->getEntity();
+            $pair = $member->getPair();
+
+            // TODO udělat to jedním SQLkem
+            if(!$pair->hasStartNumber() && $pair->isPaid())
+            {
+                $startNumber = $this->pairs->getNextStartNumber($pair->getRace());
+                $pair->setStartNumber($startNumber);
+                $args->getEntityManager()->flush($pair);
+            }
+        }
+    }
+
+}

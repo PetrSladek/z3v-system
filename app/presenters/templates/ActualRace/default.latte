@@ -1,6 +1,7 @@
 {block content}
 <h1>Editace aktuálního ročníku</h1>
 
+{snippet table}
 <table class="table table-tbody-striped table-bordered">
 	<thead>
 		<tr>
@@ -14,11 +15,12 @@
 			<th>Přijeli</th>
 			<th>Číslo</th>
 			<th>Poznámka</th>
+			<th></th>
 		</tr>
 	</thead>
 	{foreach $pairs as $pair}
 	<tbody>
-		<tr>
+		<tr n:class="$pair->isArrived() ? info : ($pair->isPaid() ? success : ($pair->isPartlyPaid() ? warning))">
 			<td rowspan="2">
 				{$pair->getId()}
 			</td>
@@ -38,11 +40,18 @@
 				{$pair->getFirstMember()->getUser()->getAddress()}
 			</td>
 			<td>
-				{$pair->getFirstMember()->isPaid() ? 'ANO' : '-'}
+				{if $pair->getFirstMember()->isPaid()}
+				<a n:href="toggleMemberPayment! $pair->getFirstMember()->getId()" class="ajax btn btn-xs btn-success">Zaplatil</a>
+				{else}
+				<a n:href="toggleMemberPayment! $pair->getFirstMember()->getId()" class="ajax btn btn-xs btn-default">Nezaplatil</a>
+				{/if}
 			</td>
-
 			<td rowspan="2">
-				{$pair->isArrived() ? 'ANO' : '-'}
+				{if $pair->isArrived()}
+				<a n:href="toggleArrived! $pair->getId()" class="ajax btn btn-xs btn-primary">Přijeli</a>
+				{else}
+				<a n:href="toggleArrived! $pair->getId()" class="ajax btn btn-xs btn-default">Nepřijeli</a>
+				{/if}
 			</td>
 			<td rowspan="2">
 				{$pair->getStartNumber() ?: 'nepřiřazeno'}
@@ -51,13 +60,10 @@
 				{$pair->getInternalNote()}
 			</td>
 			<td rowspan="2">
-				{control "frmPair{$pair->getId()}"}
-			</td>
-			<td rowspan="2">
 				<a n:href="cancelPair! $pair->getId()" class="btn btn-xs btn-danger" onclick="return confirm('Opravdu chcete tomuto páru zrušit účast?');">Smazat účast</a>
 			</td>
 		</tr>
-		<tr>
+		<tr n:class="$pair->isArrived() ? info : ($pair->isPaid() ? success : ($pair->isPartlyPaid() ? warning))">
 			<td>
 				{$pair->getSecondMember()->getUser()->getFullNameWithNickname()}
 			</td>
@@ -74,12 +80,17 @@
 				{$pair->getSecondMember()->getUser()->getAddress()}
 			</td>
 			<td>
-				{$pair->getSecondMember()->isPaid() ? 'ANO' : '-'}
+				{if $pair->getSecondMember()->isPaid()}
+				<a n:href="toggleMemberPayment! $pair->getSecondMember()->getId()" class="ajax tr-remove btn btn-xs btn-success">Zaplatil</a>
+				{else}
+				<a n:href="toggleMemberPayment! $pair->getSecondMember()->getId()" class="ajax tr-remove btn btn-xs btn-default">Nezaplatil</a>
+				{/if}
 			</td>
 		</tr>
 	</tbody>
 	{/foreach}
 </table>
+{/snippet}
 
 <div class="col-sm-6">
 	<h2>Přidat novou dvojici</h2>

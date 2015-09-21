@@ -2,11 +2,11 @@
 
 namespace App\Presenters;
 
-use app\DynamicContainer;
 use App\Forms\IPairAddFormFactory;
 use App\Forms\IPairFormFactory;
 use App\Forms\PairForm;
 use App\Model\Pair;
+use App\Model\RacerParticipation;
 use App\Query\PairsQuery;
 use App\Services\Pairs;
 use Nette\Utils\Strings;
@@ -39,6 +39,7 @@ class ActualRacePresenter extends BaseAuthPresenter
     {
         $query = new PairsQuery();
         $query->fromRace($this->race);
+        $query->withMembers();
 
     	$this->template->pairs = $this->pairs->fetch($query);
     }
@@ -117,5 +118,28 @@ class ActualRacePresenter extends BaseAuthPresenter
 
         $this->isAjax() ? $this->redrawControl() : $this->redirect('this');
     }
+
+    /**
+     * Přehodí učastníka na zaplaceno/nezaplaceno
+     * @param int $memberId
+     */
+    public function handleToggleMemberPayment($memberId)
+    {
+        /** @var RacerParticipation $member */
+        $member = $this->em->find(RacerParticipation::class, $memberId);
+        $this->pairs->toggleMemberPayment($member);
+
+        $this->isAjax() ? $this->redrawControl() : $this->redirect('this');
+    }
+
+    public function handleToggleArrived($id)
+    {
+        /** @var Pair $pair */
+        $pair = $this->em->find(Pair::class, $id);
+        $this->pairs->toggleArrived($pair);
+
+        $this->isAjax() ? $this->redrawControl() : $this->redirect('this');
+    }
+
     
 }

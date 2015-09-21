@@ -29,14 +29,18 @@ class Pairs extends Object
         $this->repository = $em->getRepository(Pair::class);
     }
 
-    public function findPaidPairs()
+    /**
+     * Vrátí následující startovní číslo v zadaném závodě
+     * @param Race $race
+     * @return int
+     */
+    public function getNextStartNumber(Race $race)
     {
-//        $query = $this->em->createQuery("SELECT rp FROM app:RacerParticipation rp WHERE rp.paid = 1 ORDER BY rp.pair")->getResult();
-        $query = $this->em->createQuery("SELECT p FROM app:Pair p WHERE NOT EXISTS (SELECT rp FROM app:RacerParticipation rp WHERE rp.pair = p AND rp.paid = 0)");
+        $query = $this->em->createQuery("SELECT MAX(p.startNumber) FROM app:Pair p WHERE p.race = :race");
+        $query->setParameter(":race", $race);
 
-        return $query->getResult();
+        return (int) $query->getSingleScalarResult() + 1;
     }
-
 
     /**
      * Vytvoří pár pro daný závod
@@ -115,6 +119,27 @@ class Pairs extends Object
         $this->em->remove($pair);
         // RacerParticipation-s removes cascade
 
+        $this->em->flush();
+    }
+
+
+    /**
+     * Překlopí stav platby jednomu závodníkovi
+     * @param RacerParticipation $membern
+     */
+    public function toggleMemberPayment(RacerParticipation $member)
+    {
+        $member->setPaid( !$member->isPaid() );
+        $this->em->flush();
+    }
+
+    /**
+     * Překlopí stav příjezdu dvojice
+     * @param Pair $pair
+     */
+    public function toggleArrived(Pair $pair)
+    {
+        $pair->setArrived( !$pair->isArrived() );
         $this->em->flush();
     }
 

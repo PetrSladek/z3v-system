@@ -156,6 +156,38 @@ class Pair
     }
 
 
+    /**
+     * Je za všechny zaplacené?
+     * @return boolean
+     */
+    public function isPaid()
+    {
+        // seznam nezaplacených je prázdný
+        $criteria = Criteria::create()->where( Criteria::expr()->eq('paid', false ));
+        return $this->members->matching($criteria)->isEmpty();
+    }
+
+    /**
+     * Je zaplaceno alespon za někoho, ale ne za všechny?
+     * @return boolean
+     */
+    public function isPartlyPaid()
+    {
+        // seznam zaplacených je neprzádný, ale není zaplacená celá skupiny
+        $criteria = Criteria::create()->where( Criteria::expr()->eq('paid', true ));
+        $someonePaid = !$this->members->matching($criteria)->isEmpty();
+        return $someonePaid && !$this->isPaid();
+    }
+
+
+    /**
+     * Mají přidělené startovní číslo?
+     * @return boolean
+     */
+    public function hasStartNumber()
+    {
+        return $this->startNumber !== null;
+    }
 
     /**
      * @return int

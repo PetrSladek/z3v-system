@@ -50,6 +50,10 @@ forms:
 		NUMERIC: 'Pole %label musí být celé číslo.'
 		MIN_LENGTH: 'Délka textu v políčku musí být alespoň %d znaků.'
 
+events:
+	subscribers:
+		- App\Listeners\MemberPaymentListener
+
 services:
 	- App\Model\Authenticator
 	- App\Forms\SignFormFactory
