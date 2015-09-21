@@ -10,6 +10,8 @@ namespace App\Query;
 
 use App\Model\Pair;
 use App\Model\Race;
+use App\Model\RacerParticipation;
+
 use Doctrine\ORM\QueryBuilder;
 use Kdyby\Persistence\Queryable;
 
@@ -40,14 +42,36 @@ class PairsQuery extends BaseQuery {
     public function onlyPaid() {
 
         $this->filter[] = function (QueryBuilder $qb) {
-            $qb->innerJoin('p.members', 'm')
-                ->addGroupBy('p.id')
-                ->andHaving('SUM(m.paid) = COUNT(m.id)');
+
+            // Neexistuje èlen, který by nezaplatil
+            $sub = $qb->getEntityManager()->createQueryBuilder();
+            $sub->select('rp.paid')
+                ->from(RacerParticipation::class, 'rp')
+                ->andWhere('rp.paid = 0')
+                ->andWhere('rp.pair = p')
+                ->groupBy('rp.pair');
+
+            $expr = $qb->expr()->not( $qb->expr()->exists($sub->getDQL()) );
+            $qb->andWhere( $expr );
+
         };
 
         return $this;
     }
 
+
+    public function withMembers()
+    {
+        $this->filter[] = function (QueryBuilder $qb) {
+
+            $qb->addSelect('m')
+                ->addSelect('u')
+                ->innerJoin('p.members', 'm')
+                ->innerJoin('m.user', 'u');
+        };
+
+
+    }
 
 
     protected function createBasicDql(Queryable $repository)

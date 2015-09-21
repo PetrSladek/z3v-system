@@ -5,6 +5,7 @@ namespace App\Presenters;
 use app\DynamicContainer;
 use App\Forms\IPairAddFormFactory;
 use App\Forms\IPairFormFactory;
+use App\Forms\PairForm;
 use App\Model\Pair;
 use App\Query\PairsQuery;
 use App\Services\Pairs;
@@ -64,7 +65,7 @@ class ActualRacePresenter extends BaseAuthPresenter
     /**
      * Vytvoří formulář pro dvojici podle paramettru $id
      * @param $id
-     * @return \App\Forms\PairForm
+     * @return PairForm
      */
     public function createDynamicComponentFrmPair($id)
     {

@@ -1,13 +1,13 @@
 {
-	"name": "nette/sandbox",
-	"description": "The sandbox is a pre-packaged Nette Framework project, basic configured structure for your application.",
-	"homepage": "http://nette.org",
+	"name": "z3v/system",
+	"description": "Registrační systém pro Závod tří vrchů",
+	"homepage": "http://www.z3v.cz",
 	"type": "project",
 	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
 	"authors": [
 		{
-			"name": "David Grudl",
-			"homepage": "http://davidgrudl.com"
+			"name": "Petr Sládek <petr.sladek@skaut.cz>",
+			"homepage": "http://www.petr-sladek.cz"
 		},
 		{
 			"name": "Nette Community",
@@ -40,10 +40,12 @@
 		"zendframework/zend-servicemanager": "2.6.0",
 		"nextras/forms": "^1.6@dev",
 		"mikulas/inflection": "dev-master",
-		"symfony/validator": "2.7.3"
+		"symfony/validator": "2.7.3",
+		"majkl578/nette-identity-doctrine": "~2.2"
 	},
 	"require-dev": {
 		"nette/tester": "~1.3"
 	},
-  	"minimum-stability": "dev"
+  	"minimum-stability": "dev",
+    "prefer-stable": true
 }

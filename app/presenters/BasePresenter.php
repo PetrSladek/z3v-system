@@ -28,12 +28,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     protected $race;
 
     /**
-     * Účast na aktuálním závodě
-     * @var null|Participation
-     */
-    protected $participation;
-
-    /**
      * @var Races
      * @inject
      */
@@ -59,7 +53,6 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
         $this->template->me = $this->me;
         $this->template->race = $this->race;
-        $this->template->participation = $this->participation;
     }
 
 

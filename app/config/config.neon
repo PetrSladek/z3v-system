@@ -13,6 +13,7 @@ extensions:
 	events: Kdyby\Events\DI\EventsExtension
 	annotations: Kdyby\Annotations\DI\AnnotationsExtension
 	doctrine: Kdyby\Doctrine\DI\OrmExtension
+	doctrine2identity: Majkl578\NetteAddons\Doctrine2Identity\DI\IdentityExtension
 
 doctrine:
 	user: # in config.local.neon
@@ -22,8 +23,8 @@ doctrine:
 	    app: App\Model
 	metadata:
 		App: %appDir%
-#	metadataCache: apc
-#	queryCache: apc
+	metadataCache: xcache
+	queryCache: xcache
 
 #annotations:
 #	cache: apc

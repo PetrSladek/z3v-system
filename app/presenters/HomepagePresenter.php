@@ -52,6 +52,9 @@ class HomepagePresenter extends BaseAuthPresenter
 	{
 		$this->template->notifications = $this->notifications->findUserLastNotifications($this->me);
         $this->template->unreadNotifications = $this->notifications->findUserUnreadNotifications($this->me);
+
+        // nactu entitu moji ucasti na tomto rocniku zavodu
+        $this->template->participation = $this->me->getParticipationInRace($this->race);
 	}
 
 	/**

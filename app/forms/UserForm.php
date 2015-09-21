@@ -12,7 +12,7 @@ use Nette\Forms\Controls\BaseControl;
 /**
  * Class UserForm
  * @package App\Forms
- * @property $entity User|null
+ * @property User|null $entity
  */
 class UserForm extends BaseEntityForm
 {
@@ -55,16 +55,16 @@ class UserForm extends BaseEntityForm
 
         $frm->addText('phone', 'Telefon:')
             ->setRequired();
-
-
         $frm->addText('tshirt', 'Triko:');
-        $frm->addTextArea('note', 'Poznámka:');
+
+//        $frm->addTextArea('note', 'Poznámka:');
 
 		$frm->addSubmit('send', 'Uložit');
 
 		$frm->onSuccess[] = [$this, 'formSuccess'];
 
-		if($this->entity) {
+		if($this->entity)
+        {
             $frm->setDefaults( $this->extract() );
         }
 
@@ -72,9 +72,18 @@ class UserForm extends BaseEntityForm
 	}
 
     protected function extract() {
-        $defaults = $this->hydrator->extract($this->entity);
-        $defaults['address'] = $this->hydrator->extract($this->entity->getAddress());
-//        $defaults['birthdate'] = $this->entity->getBirthdate()->format('j.n.Y');
+        $defaults = [];
+        $defaults['name'] = $this->entity->getName();
+        $defaults['surname'] = $this->entity->getSurname();
+        $defaults['birthdate'] = $this->entity->getBirthdate();
+        $defaults['nickname'] = $this->entity->getNickname();
+        $defaults['email'] = $this->entity->getEmail();
+        $defaults['address']['street'] = $this->entity->getAddress()->getStreet();
+        $defaults['address']['city'] = $this->entity->getAddress()->getCity();
+        $defaults['address']['postal_code'] = $this->entity->getAddress()->getPostalCode();
+        $defaults['address']['country'] = $this->entity->getAddress()->getCountry();
+        $defaults['phone'] = $this->entity->getPhone();
+        $defaults['tshirt'] = $this->entity->getTshirt();
 
         return $defaults;
     }

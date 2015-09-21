@@ -64,7 +64,7 @@ class Authenticator extends Object implements IAuthenticator
 		$this->em->flush();
 
 		// radsi vytahuju cerstvy data z DB vzdy na zacatku requestu (kvuli zmenam v administraci a tak)
-		return $user->toIdentity();
+		return $user;
 	}
 
 

@@ -12,12 +12,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Nette\Security\Identity;
+use Nette\Security\IIdentity;
 use Nette\Utils\DateTime;
 
 /**
  * @ORM\Entity
  */
-class User
+class User implements IIdentity
 {
     use \Kdyby\Doctrine\Entities\Attributes\Identifier; // Using Identifier trait for id column
 
@@ -131,7 +132,8 @@ class User
      * Vrati vsechny ucasti tohoto uzivetele na jednotlivých závodech
      * @return Participation[]
      */
-    public function getParticipations() {
+    public function getParticipations()
+    {
         return $this->participations->toArray();
     }
 
@@ -139,7 +141,8 @@ class User
      * Vrati ucast tohoto uzivatele v konrétním závodě
      * @return null|Partcipation
      */
-    public function getParticipationInRace(Race $race) {
+    public function getParticipationInRace(Race $race)
+    {
         $criteria  = Criteria::create()->where(Criteria::expr()->eq('race',$race));
         return $this->participations->matching($criteria)->first();
     }
@@ -149,7 +152,8 @@ class User
      * Ma nějaké nepřečtené notifikace?
      * @return boolean
      */
-    public function hasUnreadNotification() {
+    public function hasUnreadNotification()
+    {
         $criteria  = Criteria::create()->where(Criteria::expr()->isNull('readAt'));
         return !$this->notifications->matching($criteria)->isEmpty();
     }
@@ -158,7 +162,8 @@ class User
      * Vrati jako Security Identity object
      * @return Identity
      */
-    public function toIdentity() {
+    public function toIdentity()
+    {
         return new Identity($this->getId(), null, null);
     }
 
@@ -355,8 +360,14 @@ class User
     }
 
 
-
-
+    /**
+     * Kvuli IIdentity
+     * @return array
+     */
+    public function getRoles()
+    {
+        return array();
+    }
 
 }
 

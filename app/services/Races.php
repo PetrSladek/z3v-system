@@ -8,6 +8,7 @@ namespace App\Services;
 
 use App\Model\Race;
 use Kdyby\Doctrine\EntityManager;
+use Nette\Caching\Cache;
 use Nette\Object;
 
 class Races extends Object
@@ -19,7 +20,6 @@ class Races extends Object
     {
         $this->em = $em;
         $this->repository = $em->getRepository(Race::class);
-        // $this->articles = $em->getRepository(App\Article::getClassName()); // for older PHP
     }
 
 
@@ -46,7 +46,8 @@ class Races extends Object
      */
     public function findActualRace()
     {
-        return $this->repository->findOneBy(['actual'=>true]);
+        $race =  $this->repository->findOneBy(['actual'=>true]);
+        return $race;
     }
 
     public function findAll()
