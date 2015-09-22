@@ -8,7 +8,7 @@ use App\Model\Authenticator;
 use App\Model\User;
 use Kdyby\Doctrine\EntityManager;
 use Nette;
-use Nette\Application\UI\Form;
+use App\Forms\Base\Form;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 /**

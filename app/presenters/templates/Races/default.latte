@@ -26,7 +26,7 @@
 			<td>
 				{$race->getYear()}
 			</td>
-			<td>
+			<td n:inner-if="$race->getDate()">
 				{$race->getDate()->format('j.n.Y')}
 			</td>
 			<td n:inner-if="$race->getStartTime()">

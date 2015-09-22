@@ -3,9 +3,9 @@
 namespace App\Forms;
 
 use App\Forms\Base\BaseEntityForm;
+use App\Forms\Base\Form;
 use App\Model\Address;
 use App\Model\User;
-use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 
 
@@ -28,7 +28,7 @@ class UserForm extends BaseEntityForm
 	 */
     protected function createComponentForm()
 	{
-		$frm = new Form;
+		$frm = new Form();
 		$frm->addText('name', 'Jméno:')
             ->setRequired();
 		$frm->addText('surname', 'Příjmení:')

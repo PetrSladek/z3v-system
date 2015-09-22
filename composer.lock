@@ -4,7 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ded3c342599c776ea341b4306b1c5ea7",
+    "hash": "e300db0a52ba22f885ec8797d619ca21",
+    "content-hash": "0d1853be286dfbcebc2bbeb242bbb889",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -1210,7 +1211,7 @@
             ],
             "authors": [
                 {
-                    "name": "Mikulas Dite",
+                    "name": "Mikuláš Dítě",
                     "email": "mikulas@dite.pro"
                 },
                 {

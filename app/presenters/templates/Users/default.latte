@@ -36,10 +36,10 @@
 			<td>
 				<strong>{$user->getNickName()}</strong>
 			</td>
-			<td contenteditable="true">
+			<td>
 				{$user->getAddress()->getStreet()}
 			</td>
-			<td>
+			<td n:inner-if="$user->getBirthDate()">
 				{$user->getBirthDate()->format('j.n.Y')}
 			</td>
 			<td rowspan="3">

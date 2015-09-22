@@ -8,7 +8,7 @@ use App\Model\User;
 use Doctrine\ORM\EntityNotFoundException;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
+use App\Forms\Base\Form;
 use Nette\Forms\Controls\BaseControl;
 
 
@@ -54,6 +54,7 @@ class PairSendInvitationForm extends Control
 	{
 		$frm = new Form;
 		$frm->addText('email', 'Zaslat pozvánku registrovanému závodníkovi na email:')
+            ->setAttribute('placeholder' , 'muj-kolega@jeho-mail.cz')
 			->setRequired()
             ->addRule($frm::EMAIL)
             ->addRule(function(BaseControl $control) {
