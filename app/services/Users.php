@@ -6,7 +6,10 @@
 
 namespace App\Services;
 
+use App\Model\Authenticator;
+use App\Model\DuplicateEmailException;
 use App\Model\User;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Kdyby\Doctrine\EntityManager;
 use Nette\Object;
 
@@ -14,11 +17,13 @@ class Users extends Object
 {
     private $em;
     private $repository;
+    private $authenticator;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, Authenticator $authenticator)
     {
         $this->em = $em;
         $this->repository = $em->getRepository(User::class);
+        $this->authenticator = $authenticator;
     }
 
 
@@ -27,5 +32,21 @@ class Users extends Object
         return $this->repository->findAll();
     }
 
+    public function createUser($email, $password)
+    {
+        $user = new User();
+        $user->setEmail($email);
+        $user->setPassword($this->authenticator->hash($password));
+
+        try
+        {
+            $this->em->persist($user)->flush();
+        }
+        catch (UniqueConstraintViolationException $e)
+        {
+            throw new DuplicateEmailException;
+        }
+
+    }
 
 }

@@ -3,13 +3,10 @@
 namespace App\Forms;
 
 use App\Forms\Base\BaseEntityForm;
-use App\Model\Address;
 use App\Model\Checkpoint;
 use App\Model\Race;
-use App\Model\User;
 use Kdyby\Doctrine\EntityManager;
 use App\Forms\Base\Form;
-use Nette\Forms\Controls\BaseControl;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 
@@ -47,6 +44,8 @@ class CheckpointForm extends BaseEntityForm
     protected function createComponentForm()
 	{
 		$frm = new Form;
+//        $frm->setAjax(true);
+
 		$frm->addText('number', 'Číslo:')
             ->setRequired()
             ->addRule($frm::INTEGER);

@@ -27,20 +27,25 @@ class CheckpointsPresenter extends BaseAuthPresenter
      */
     private $entity;
 
-    public function actionDefault($id = null)
+
+    public function renderDefault()
     {
+        $this->template->checkpoints = $this->race->getCheckpoints();
+        $this->template->renderModal = !empty($this->template->renderModal) || false;
+    }
+
+
+    public function actionEdit($id = null)
+    {
+
         if($id)
         {
             $this->entity = $this->em->getReference(Checkpoint::class, $id);
             if(!$this->entity)
                 $this->error('Entity not found');
         }
-    }
 
-    public function renderDefault()
-    {
-        $this->template->checkpoints = $this->race->getCheckpoints();
-        $this->template->renderModal = !empty($this->template->renderModal) || false;
+        $this->redrawControl();
     }
 
 
@@ -53,22 +58,20 @@ class CheckpointsPresenter extends BaseAuthPresenter
             else
                 $this->flashMessage('Stanoviště úspěšně upraveno', 'success');
 
-            $this->redirect('this', ['id' => null]);
+//            $this->isAjax() ? $this->redrawControl() :
+            $this->redirect('default');
         };
         return $control;
-    }
-
-
-    public function handleOpenModal($id = null)
-    {
-        $this->template->renderModal = true;
-        $this->redrawControl();
     }
 
 
 
     public function handleRemove($id)
     {
+        $this->entity = $this->em->getReference(Checkpoint::class, $id);
+        if(!$this->entity)
+            $this->error('Entity not found');
+
         $this->em->remove($this->entity);
         $this->em->flush();
 

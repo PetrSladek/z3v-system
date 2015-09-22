@@ -12,11 +12,12 @@ Usage: create-user.php <name> <password>
 list(, $email, $password) = $_SERVER['argv'];
 
 $container = require __DIR__ . '/../app/bootstrap.php';
-$manager = $container->getByType('App\Model\UserManager');
+/** @var \App\Services\Users $users */
+$users = $container->getByType('App\Services\Users');
 
 try {
-	$manager->add($email, $password);
-	echo "User $name was added.\n";
+	$users->createUser($email, $password);
+	echo "User $email was added.\n";
 
 } catch (\App\Model\DuplicateEmailException $e) {
 	echo "Error: duplicate name.\n";

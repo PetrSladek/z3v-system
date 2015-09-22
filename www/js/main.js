@@ -3,6 +3,11 @@ $(function(){
 
     $.nette.init();
 
+    $(document).on('click','.tr-remove', function() {
+        $(this).closest('tr').fadeOut(1000, function () {
+            $(this).remove();
+        });
+    });
 
     $('.select2').each(function() {
         $(this).select2({
@@ -36,6 +41,7 @@ $(function(){
             var self = this;
 
             this.ext('snippets', true).after($.proxy(function ($el) {
+
                 if (!$el.is('.modal')) {
                     return;
                 }
@@ -57,6 +63,21 @@ $(function(){
             el.modal({});
         }
     });
+
+    $.nette.ext('tr-remove', {
+        before: function (xhr, settings) {
+            if(settings.nette.el.is('.tr-remove'))
+            {
+                settings.nette.el.closest('tr').fadeOut(500, function() {
+                    $(this).remove();
+                });
+            }
+        }
+    }, {
+
+    });
+
+
 
 })(jQuery);
 

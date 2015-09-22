@@ -25,8 +25,8 @@
 				{$checkpoint->getCoefficient()}
 			</td>
 			<td>
-				<a n:href="openModal! $checkpoint->getId()" class="ajax btn btn-xs btn-info">Editovat</a>
-				<a n:href="remove! $checkpoint->getId()" class="ajax btn btn-xs btn-danger">Smazat</a>
+				<a n:href="edit $checkpoint->getId()" class="ajax btn btn-xs btn-info">Editovat</a>
+				<a n:href="remove! $checkpoint->getId()" class="ajax tr-remove btn btn-xs btn-danger">Smazat</a>
 			</td>
 		</tr>
 		{/foreach}
@@ -34,23 +34,9 @@
 </table>
 {/snippet}
 
-<a n:href="openModal! null" class="ajax btn btn-primary">Přidat stanoviště</a>
+<a n:href="edit" class="ajax btn btn-primary">Přidat stanoviště</a>
 
-<div n:snippet n:inner-if="$renderModal" class="modal fade login-modal" tabindex="-1" role="dialog" aria-labelledby="addCheckpointTitle" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content ajax-overlay">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="addCheckpointTitle">Přidat stanoviště</h4>
-			</div>
-			<div class="modal-body">
-				{control frmCheckpoint}
-			</div>
-			<div class="modal-footer">
-
-			</div>
-		</div>
-	</div>
+<div n:snippet="modal" class="modal fade login-modal" tabindex="-1" role="dialog" aria-labelledby="ModalTitle" aria-hidden="true">
 </div>
 
 {/block}
