@@ -52,6 +52,12 @@ $(function(){
             $('.modal[id^="snippet-"]').each(function () {
                 self.open($(this));
             });
+        },
+        success: function (payload) {
+            if(payload.modalClose)
+            {
+                $('.modal').modal('hide');
+            }
         }
     }, {
         open: function (el) {

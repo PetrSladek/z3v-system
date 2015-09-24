@@ -3,6 +3,27 @@
     background-color: #F9F9F9;
 }
 
+.form-control.ajax-form-control {
+    border: 1px solid transparent;
+    background: transparent;
+    box-shadow: none;
+    transition: background-color 0.15s ease-in-out 0s, border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+}
+.form-control.ajax-form-control:hover {
+    /* vychozi vzhled inputu */
+    background-color: #FFF;
+    border: 1px solid #CCC;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+.form-control.ajax-form-control:focus {
+    /* vychozi vzhled inputu:focus */
+    background-color: #FFF;
+    border-color: #66AFE9;
+    outline: 0px none;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(102, 175, 233, 0.6);
+}
+
+
 
 
 .twitter-typeahead {

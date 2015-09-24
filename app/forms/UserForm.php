@@ -6,6 +6,7 @@ use App\Forms\Base\BaseEntityForm;
 use App\Forms\Base\Form;
 use App\Model\Address;
 use App\Model\User;
+use Doctrine\ORM\EntityNotFoundException;
 use Nette\Forms\Controls\BaseControl;
 
 
@@ -22,8 +23,64 @@ class UserForm extends BaseEntityForm
      */
     protected $entityClass = User::class;
 
+    /**
+     * Vykreslit otevřený modal?
+     * @var bool
+     * @persistent
+     */
+    public $renderModal = false;
 
-	/**
+    /**
+     * @var int
+     * @persistent
+     */
+    public $id;
+
+    protected function attached($presenter)
+    {
+        parent::attached($presenter);
+
+        if($this->id)
+            $this->load($this->id);
+    }
+
+    public function load($id)
+    {
+        $this->entity = $this->em->find($this->entityClass, $id);
+        if(!$this->entity)
+            throw new EntityNotFoundException;
+    }
+
+
+    /**
+     * Vykreslení formu do modalu
+     */
+    public function render()
+    {
+        $this->template->setFile(__DIR__.'/templates/userForm.latte');
+        $this->template->renderModal = $this->renderModal;
+        $this->template->entity = $this->entity;
+
+        $this->redrawControl();
+        $this->template->render();
+    }
+
+    /**
+     * Otevře modal a do něj entitu podle ID
+     * @param $id
+     * @throws EntityNotFoundException
+     */
+    public function handleOpen($id = null)
+    {
+        if($id)
+            $this->load($id);
+
+        $this->renderModal = true;
+        $this->redrawControl();
+    }
+
+
+    /**
 	 * @return Form
 	 */
     protected function createComponentForm()
@@ -39,10 +96,12 @@ class UserForm extends BaseEntityForm
 		$frm->addText('email', 'E-mail:')
             ->addRule($frm::EMAIL)
             ->addRule(function(BaseControl $control) {
+                // email neměním takze ok
                 if($this->entity && $this->entity->getEmail() == $control->value)
-                    return true; // email neměním takze ok
+                    return true;
+                // pokud existuje nekdo jinej s timto emailemm, tak je to spatne
                 $user = $this->em->getRepository(User::class)->findOneBy(['email'=>$control->value]);
-                return $user === null; // pokud existuje nekdo jinej s timto emailemm, tak je to spatne
+                return $user === null;
             }, 'Tento e-mail je už zaregistrovaný, zvolte jiný')
 			->setRequired();
 
@@ -61,6 +120,11 @@ class UserForm extends BaseEntityForm
 
 		$frm->addSubmit('send', 'Uložit');
 
+        $frm->onSuccess[] = function()
+        {
+            $this->presenter->payload->modalClose = true;
+            $this->renderModal = false;
+        };
 		$frm->onSuccess[] = [$this, 'formSuccess'];
 
 		if($this->entity)

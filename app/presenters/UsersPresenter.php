@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use app\DynamicContainer;
+use App\Forms\Base\Form;
 use App\Forms\ICheckpointFormFactory;
 use App\Forms\IPairAddFormFactory;
 use App\Forms\IPairFormFactory;
@@ -18,6 +19,7 @@ use App\Query\PairsQuery;
 use App\Services\Pairs;
 use App\Services\Races;
 use App\Services\Users;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Strings;
 
 
@@ -43,13 +45,21 @@ class UsersPresenter extends BaseAuthPresenter
 //     */
 //    public $raceFormFactory;
 
+    /**
+     * @var User[]
+     */
+    private $list;
+
+    public function actionDefault()
+    {
+    }
 
     public function renderDefault()
     {
-        $users = $this->users->findAll();
-        $this->template->users = $users;
-        $this->template->total = count($users);
+        $this->list = $this->list ?: $this->users->findAll();
+        $this->template->users = $this->list;
     }
+
 
 
     /**
@@ -61,10 +71,12 @@ class UsersPresenter extends BaseAuthPresenter
         $control->onSave[] = function($sender, User $entity)
         {
             $this->flashMessage("Uživatel {$entity->getFullNameWithNickname()} úspěšně uložen", 'success');
-            $this->redirect('this');
+            $this->list = [$entity];
+            $this->isAjax() ? $this->redrawControl() : $this->redirect('this');
         };
         return $control;
     }
+
 
 
 

@@ -29,7 +29,8 @@ class Users extends Object
 
     public function findAll()
     {
-        return $this->repository->findAll();
+        $dql = $this->em->createQuery('SELECT u FROM app:User u');
+        return $dql->iterate();
     }
 
     public function createUser($email, $password)

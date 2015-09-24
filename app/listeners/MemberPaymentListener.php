@@ -23,7 +23,6 @@ class MemberPaymentListener extends Object implements Subscriber
     private $pairs;
 
 
-
     /**
      * MemberPaymentListener constructor.
      * @param Pairs $pairs
@@ -34,11 +33,19 @@ class MemberPaymentListener extends Object implements Subscriber
     }
 
 
+    /**
+     * Vrátí na kterou událost reafuje
+     * @return array
+     */
     public function getSubscribedEvents()
     {
         return [Events::postUpdate];
     }
 
+    /**
+     * Akce na postUpdate entit RacerParticipation
+     * @param LifecycleEventArgs $args
+     */
     public function postUpdate(LifecycleEventArgs  $args)
     {
 

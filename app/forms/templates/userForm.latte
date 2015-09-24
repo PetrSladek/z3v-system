@@ -1,0 +1,32 @@
+<div n:snippet n:inner-if="$renderModal" class="modal fade login-modal" tabindex="-1" role="dialog" aria-labelledby="{$control->name}ModalTitle" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content ajax-overlay">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 n:if="!$entity" class="modal-title" id="{$control->name}ModalTitle">Nový uživatel</h4>
+				<h4 n:if="$entity" class="modal-title" id="{$control->name}ModalTitle">{$entity->getFullName()} <small n:ifcontent>({$entity->getNickname()})</small></h4>
+			</div>
+
+			<form n:name="form" class="form-horizontal ajax">
+				<div class="modal-body">
+
+					<ul class="error" n:if="$form->ownErrors">
+						<li n:foreach="$form->ownErrors as $error">{$error}</li>
+					</ul>
+
+					<div n:foreach="$form->controls as $input" n:class="form-group, $input->required ? required">
+						{continueIf in_array($input->name, ['send'])}
+						<div class="col-sm-3 control-label">{label $input /}</div>
+						<div class="col-sm-9">{input $input}</div>
+						<span class="error" n:ifcontent>{$input->error}</span>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button n:name="send" class="btn btn-primary">Uložit</button>
+				</div>
+			</form>
+
+		</div>
+	</div>
+</div>
