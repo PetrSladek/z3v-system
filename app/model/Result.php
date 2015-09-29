@@ -42,5 +42,86 @@ class Result
      */
     protected $points = 0;
 
+    /**
+     * Result constructor.
+     * @param DateTime $checkIn
+     * @param DateTime $startAt
+     * @param DateTime $checkOut
+     * @param int $points
+     */
+    public function __construct(DateTime $checkIn, DateTime $startAt = null, DateTime $checkOut = null, $points = 0)
+    {
+        $this->checkIn = $checkIn;
+        $this->startAt = $startAt;
+        $this->checkOut = $checkOut;
+        $this->points = $points;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getCheckIn()
+    {
+        return $this->checkIn;
+    }
+
+    /**
+     * @param DateTime $checkIn
+     */
+    public function setCheckIn($checkIn)
+    {
+        $this->checkIn = $checkIn;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getStartAt()
+    {
+        return $this->startAt;
+    }
+
+    /**
+     * @param DateTime $startAt
+     */
+    public function setStartAt($startAt)
+    {
+        $this->startAt = $startAt;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getCheckOut()
+    {
+        return $this->checkOut;
+    }
+
+    /**
+     * @param DateTime $checkOut
+     */
+    public function setCheckOut($checkOut)
+    {
+        $this->checkOut = $checkOut;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPoints()
+    {
+        return $this->points;
+    }
+
+    /**
+     * @param int $points
+     */
+    public function setPoints($points)
+    {
+        $this->points = $points;
+    }
+
+
+
 
 }

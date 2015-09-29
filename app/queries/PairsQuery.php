@@ -60,6 +60,16 @@ class PairsQuery extends BaseQuery {
     }
 
 
+    public function onlyArrived()
+    {
+        $this->filter[] = function (QueryBuilder $qb) {
+            $qb->andWhere('p.arrived = :arrived')
+                ->setParameter('arrived', true);
+        };
+        return $this;
+    }
+
+
     public function withMembers()
     {
         $this->filter[] = function (QueryBuilder $qb) {

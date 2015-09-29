@@ -1,0 +1,40 @@
+{block content}
+
+<table class="table table-tbody-striped table-bordered">
+	<thead>
+		<tr>
+			<th>Startovní číslo</th>
+			<th>Jméno</th>
+			{foreach $checkpoints as $checkpoint}
+			<th>
+				Stanoviště {$checkpoint->getNumber()}<br />
+				<small>{$checkpoint->getName()}</small>
+			</th>
+			{/foreach}
+		</tr>
+	</thead>
+	{foreach $pairs as $pair}
+	<tbody>
+		<tr>
+			<td rowspan="2">
+				{$pair->getStartNumber() ?: 'nepřiřazeno'}
+			</td>
+			<td>
+				{$pair->getFirstMember()->getUser()->getFullNameWithNickname()}
+			</td>
+			{foreach $checkpoints as $checkpoint}
+			<th rowspan="2">
+				{control resultEdit-{$pair->getId()}-{$checkpoint->getId()}}
+			</th>
+			{/foreach}
+		</tr>
+		<tr>
+			<td>
+				{$pair->getSecondMember()->getUser()->getFullNameWithNickname()}
+			</td>
+		</tr>
+	</tbody>
+	{/foreach}
+<table>
+
+{/block}

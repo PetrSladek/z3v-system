@@ -68,16 +68,4 @@ class Users extends Object
     }
 
 
-
-    /**
-     * @param Query $queryObject
-     * @param int   $hydrationMode
-     *
-     * @return array|\Kdyby\Doctrine\ResultSet
-     */
-    public function fetch(Query $queryObject, $hydrationMode = AbstractQuery::HYDRATE_OBJECT)
-    {
-        return $this->repository->fetch($queryObject, $hydrationMode);
-    }
-
 }
