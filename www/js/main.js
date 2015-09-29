@@ -8,6 +8,11 @@ $(function(){
             $(this).remove();
         });
     });
+    $(document).on('click','.tbody-remove', function() {
+        $(this).closest('tbody').fadeOut(1000, function () {
+            $(this).remove();
+        });
+    });
 
     $('.select2').each(function() {
         $(this).select2({
