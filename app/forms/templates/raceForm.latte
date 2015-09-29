@@ -3,8 +3,8 @@
 		<div class="modal-content ajax-overlay">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 n:if="!$entity" class="modal-title" id="{$control->name}ModalTitle">Nový uživatel</h4>
-				<h4 n:if="$entity" class="modal-title" id="{$control->name}ModalTitle">{$entity->getFullName()} <small n:ifcontent>({$entity->getNickname()})</small></h4>
+				<h4 n:if="!$entity" class="modal-title" id="{$control->name}ModalTitle">Nový závod</h4>
+				<h4 n:if="$entity" class="modal-title" id="{$control->name}ModalTitle">Závod {$entity->getYear()} <small n:ifcontent>{$entity->getLocation()}</small></h4>
 			</div>
 
 			<form n:name="form" class="form-horizontal ajax">
@@ -14,7 +14,7 @@
 						<li n:foreach="$form->ownErrors as $error">{$error}</li>
 					</ul>
 
-					{foreach $form->controls as $input}
+ 					{foreach $form->controls as $input}
 					{continueIf in_array($input->name, ['send','submit'])}
 						<div n:class="form-group, $input->required ? required">
 							<div class="col-sm-4 control-label">{label $input /}</div>

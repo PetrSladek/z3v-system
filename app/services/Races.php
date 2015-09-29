@@ -23,6 +23,14 @@ class Races extends Object
     }
 
 
+
+
+    /**
+     * Zmeni uzamknuti zavodu
+     * @param Race $race
+     *
+     * @throws \Exception
+     */
     public function toggleLocked(Race $race)
     {
         $race->setLocked( !$race->isLocked() );
@@ -30,6 +38,12 @@ class Races extends Object
     }
 
 
+    /**
+     * Nastavi zavod jako aktualni
+     * @param Race $race
+     *
+     * @throws \Exception
+     */
     public function setAsActual(Race $race)
     {
         $actual = $this->findActualRace();
@@ -50,6 +64,26 @@ class Races extends Object
         return $race;
     }
 
+
+
+    /**
+     * Vrátí číslo dalšího stanoviště zadaného závodu
+     * @param Race $race
+     * @return int
+     */
+    public function getNextCheckpointNumber(Race $race)
+    {
+        $dql = $this->em->createQuery('SELECT MAX(ch.number)+1 FROM app:Checkpoint ch WHERE ch.race = :race');
+        $dql->setParameter('race', $race);
+
+        return (int) $dql->getSingleScalarResult();
+    }
+
+
+    /**
+     * @deprecated use Query classes
+     * @return array
+     */
     public function findAll()
     {
         return $this->repository->findAll();

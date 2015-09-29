@@ -37,7 +37,7 @@ abstract class BaseEntityForm extends Nette\Application\UI\Control
     protected $entityClass;
 
 
-    public function __construct(EntityManager $em, HydratorInterface $hydrator, $id = null)
+    public function __construct(EntityManager $em, HydratorInterface $hydrator = null, $id = null)
     {
         parent::__construct();
 

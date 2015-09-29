@@ -2,12 +2,10 @@
 
 namespace App\Forms;
 
-use App\Forms\Base\BaseEntityForm;
 use App\Forms\Base\BaseModalForm;
 use App\Forms\Base\Form;
 use App\Model\Address;
 use App\Model\User;
-use Doctrine\ORM\EntityNotFoundException;
 use Nette\Forms\Controls\BaseControl;
 
 

@@ -21,6 +21,12 @@ abstract class BaseModalForm extends BaseEntityForm
 	public $id;
 
 
+	/**
+	 * @var string Soubor s šablonou
+	 */
+	protected $templateFile = 'templates/form.latte';
+
+
 
 	/**
 	 * Pri pripojeni do presenteru

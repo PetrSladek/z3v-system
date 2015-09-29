@@ -47,9 +47,10 @@ class RacesPresenter extends BaseAuthPresenter
     protected function createComponentFrmRace()
     {
         $control = $this->raceFormFactory->create();
-        $control->onSave[] = function() {
-            $this->flashMessage('Nový ročník závodu úspěšně přidán', 'success');
-            $this->redirect('this');
+        $control->onSave[] = function($sender, Race $race)
+        {
+            $this->flashMessage("Závod {$race->getYear()} {$race->getLocation()} úspěšně uložen", 'success');
+            $this->isAjax() ? $this->redrawControl() : $this->redirect('this');
         };
         return $control;
     }

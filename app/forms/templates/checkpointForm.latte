@@ -14,12 +14,14 @@
 						<li n:foreach="$form->ownErrors as $error">{$error}</li>
 					</ul>
 
-					<div n:foreach="$form->controls as $input" n:class="form-group, $input->required ? required" n:ifcontent>
-						{continueIf in_array($input->name, ['send'])}
-						<div class="col-sm-3 control-label">{label $input /}</div>
-						<div class="col-sm-9">{input $input}</div>
-						<span class="error" n:ifcontent>{$input->error}</span>
-					</div>
+ 					{foreach $form->controls as $input}
+					{continueIf in_array($input->name, ['send','submit'])}
+						<div n:class="form-group, $input->required ? required">
+							<div class="col-sm-4 control-label">{label $input /}</div>
+							<div class="col-sm-8">{input $input class=>'form-control'}</div>
+							<span class="error" n:ifcontent>{$input->error}</span>
+						</div>
+					{/foreach}
 
 				</div>
 				<div class="modal-footer">

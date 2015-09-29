@@ -5,8 +5,9 @@ namespace App\Forms;
 use App\Forms\Base\BaseModalForm;
 use App\Model\Checkpoint;
 use App\Model\Race;
+use App\Services\Races;
 use Kdyby\Doctrine\EntityManager;
-use App\Forms\Base\Form;
+use Nette\Application\UI\Form;
 use Zend\Stdlib\Hydrator\HydratorInterface;
 
 
@@ -33,11 +34,17 @@ class CheckpointForm extends BaseModalForm
      */
     protected $race;
 
+    /**
+     * @var Races
+     */
+    protected $races;
 
-    public function __construct(EntityManager $em, HydratorInterface $hydrator, Race $race, $id = null)
+
+    public function __construct(EntityManager $em, HydratorInterface $hydrator, Races $races, Race $race, $id = null)
     {
         parent::__construct($em, $hydrator, $id);
 
+        $this->races = $races;
         $this->race = $race;
     }
 
@@ -48,8 +55,6 @@ class CheckpointForm extends BaseModalForm
     protected function createComponentForm()
 	{
 		$frm = new Form;
-//        $frm->setAjax(true);
-
 		$frm->addText('number', 'Číslo:')
             ->setRequired()
             ->addRule($frm::INTEGER);
@@ -64,8 +69,15 @@ class CheckpointForm extends BaseModalForm
 
 		$frm->onSuccess[] = [$this, 'formSuccess'];
 
-		if($this->entity) {
+		if($this->entity)
+        {
             $frm->setDefaults( $this->extract() );
+        }
+        else
+        {
+            $frm->setDefaults([
+                'number' => $this->races->getNextCheckpointNumber($this->race)
+            ]);
         }
 
 		return $frm;
@@ -96,6 +108,9 @@ class CheckpointForm extends BaseModalForm
 
 interface ICheckpointFormFactory
 {
-	/** @return CheckpointForm */
+    /**
+     * @param Race $race Závod
+     * @return CheckpointForm
+     */
 	function create(Race $race, $id = null);
 }

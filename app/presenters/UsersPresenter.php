@@ -2,28 +2,12 @@
 
 namespace App\Presenters;
 
-use app\DynamicContainer;
-use App\Forms\Base\Form;
-use App\Forms\ICheckpointFormFactory;
-use App\Forms\IPairAddFormFactory;
-use App\Forms\IPairFormFactory;
-use App\Forms\IRaceFormFactory;
 use App\Forms\IUserFormFactory;
-use App\Forms\RaceForm;
 use App\Forms\UserForm;
-use App\Model\Checkpoint;
-use App\Model\Pair;
-use App\Model\Race;
 use App\Model\User;
-use App\Query\PairsQuery;
 use App\Query\UsersQuery;
-use App\Services\Pairs;
-use App\Services\Races;
 use App\Services\Users;
 use Kdyby\Doctrine\ResultSet;
-use Nette\Forms\Controls\BaseControl;
-use Nette\Utils\Strings;
-
 
 class UsersPresenter extends BaseAuthPresenter
 {

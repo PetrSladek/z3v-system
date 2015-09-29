@@ -38,9 +38,9 @@ application:
 
 session:
 	expiration: 14 days
-latte:
-	macros:
-		- Nextras\Forms\Bridges\Latte\Macros\BS3InputMacros
+#latte:
+#	macros:
+#		- Nextras\Forms\Bridges\Latte\Macros\BS3InputMacros
 forms:
 	messages:
 		EQUAL: 'Prosím vyplňte %s.'

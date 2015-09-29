@@ -3,11 +3,14 @@
 <h1>Správa ročníků</h1>
 
 <h2>Seznam ročníků</h2>
+
+<a n:href="frmRace-open!" class="ajax btn btn-primary">Přidat ročník</a>
+{control frmRace}
+
 {snippet table}
 <table class="table table-striped table-bordered">
 	<thead>
 		<tr>
-			<th>Aktuální</th>
 			<th>Ročník</th>
 			<th>Datum</th>
 			<th>Čas startu</th>
@@ -19,10 +22,7 @@
 	</thead>
 	<tbody>
 {foreach $races as $race}
-		<tr>
-			<td>
-				{$race->isActual() ? 'Ano' : 'Ne'}
-			</td>
+		<tr n:class="$race->isActual() ? success">
 			<td>
 				{$race->getYear()}
 			</td>
@@ -42,11 +42,10 @@
 				{$race->isLocked() ? 'Ano' : 'Ne'}
 			</td>
 			<td>
-				<a class="ajax btn btn-xs btn-default" n:href="setActual! $race->getId()">Označit jako aktuální</a>
+				<a n:if="!$race->isActual()" class="ajax btn btn-xs btn-default" n:href="setActual! $race->getId()">Označit jako aktuální</a>
 				<a class="ajax btn btn-xs btn-default" n:href="toggleLocked! $race->getId()">{if $race->isLocked()}Odemknout{else}Zamknout{/if}</a>
 
-				{*<a n:href="openModal! $checkpoint->getId()" class="ajax btn btn-xs btn-info">Editovat</a>*}
-				{*<a n:href="remove! $checkpoint->getId()" class="ajax btn btn-xs btn-danger">Smazat</a>*}
+				<a href="{link frmRace-open! 'frmRace-id'=>$race->getId()}" class="ajax btn btn-info btn-xs">Editovat</a>
 			</td>
 		</tr>
 		{/foreach}

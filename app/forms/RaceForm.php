@@ -2,7 +2,7 @@
 
 namespace App\Forms;
 
-use App\Forms\Base\BaseEntityForm;
+use App\Forms\Base\BaseModalForm;
 use App\Model\Checkpoint;
 use App\Model\Race;
 use App\Forms\Base\Form;
@@ -14,13 +14,18 @@ use Nette\Utils\DateTime;
  * @package App\Forms
  * @property Race|null $entity
  */
-class RaceForm extends BaseEntityForm
+class RaceForm extends BaseModalForm
 {
 
     /**
      * @var string Class name of entity
      */
     protected $entityClass = Race::class;
+
+    /**
+     * @var string Soubor s šablonou
+     */
+    protected $templateFile = 'templates/raceForm.latte';
 
 
 
@@ -49,8 +54,10 @@ class RaceForm extends BaseEntityForm
 		return $frm;
 	}
 
-    protected function extract() {
+    protected function extract()
+    {
         $defaults = $this->hydrator->extract($this->entity);
+        $defaults['start_time'] = $this->entity->getStartTime()->format("H:i");
         return $defaults;
     }
 
