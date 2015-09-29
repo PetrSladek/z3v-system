@@ -1,6 +1,8 @@
 {block content}
 <h1>Editace aktuálního ročníku</h1>
 
+{control frmUser}
+
 {snippet table}
 <table class="table table-tbody-striped table-bordered">
 	<thead>
@@ -14,7 +16,6 @@
 			<th>Zaplaceno</th>
 			<th>Přijeli</th>
 			<th>Číslo</th>
-			<th>Poznámka</th>
 			<th></th>
 		</tr>
 	</thead>
@@ -26,6 +27,7 @@
 			</td>
 			<td>
 				{$pair->getFirstMember()->getUser()->getFullNameWithNickname()}
+				<br /><a n:href="frmUser-open! 'frmUser-id'=>$pair->getFirstMember()->getUser()->getId()" class="ajax btn btn-xs btn-default">Editovat</a>
 			</td>
 			<td>
 				{$pair->getFirstMember()->getUser()->getTshirt()}
@@ -57,15 +59,13 @@
 				{$pair->getStartNumber() ?: 'nepřiřazeno'}
 			</td>
 			<td rowspan="2">
-				{$pair->getInternalNote()}
-			</td>
-			<td rowspan="2">
-				<a n:href="cancelPair! $pair->getId()" class="btn btn-xs tbody-remove btn-danger" onclick="return confirm('Opravdu chcete tomuto páru zrušit účast?');">Smazat účast</a>
+				<a n:href="cancelPair! $pair->getId()" class="btn btn-xs btn-danger" onclick="return confirm('Opravdu chcete tomuto páru zrušit účast?');">Smazat účast</a>
 			</td>
 		</tr>
 		<tr n:class="$pair->isArrived() ? info : ($pair->isPaid() ? success : ($pair->isPartlyPaid() ? warning))">
 			<td>
 				{$pair->getSecondMember()->getUser()->getFullNameWithNickname()}
+				<br /><a n:href="frmUser-open! 'frmUser-id'=>$pair->getSecondMember()->getUser()->getId()" class="ajax btn btn-xs btn-default">Editovat</a>
 			</td>
 			<td>
 				{$pair->getSecondMember()->getUser()->getTshirt()}

@@ -4,9 +4,12 @@ namespace App\Presenters;
 
 use App\Forms\IPairAddFormFactory;
 use App\Forms\IPairFormFactory;
+use App\Forms\IUserFormFactory;
 use App\Forms\PairForm;
+use App\Forms\UserForm;
 use App\Model\Pair;
 use App\Model\RacerParticipation;
+use App\Model\User;
 use App\Query\PairsQuery;
 use App\Services\Pairs;
 use Nette\Utils\Strings;
@@ -21,6 +24,12 @@ class ActualRacePresenter extends BaseAuthPresenter
      * @inject
      */
     public $pairFormFactory;
+
+    /**
+     * @var IUserFormFactory
+     * @inject
+     */
+    public $userFormFactory;
 
     /**
      * @var IPairAddFormFactory
@@ -141,5 +150,19 @@ class ActualRacePresenter extends BaseAuthPresenter
         $this->isAjax() ? $this->redrawControl() : $this->redirect('this');
     }
 
+
+    /**
+     * @return UserForm
+     */
+    public function createComponentFrmUser()
+    {
+        $control = $this->userFormFactory->create(null);
+        $control->onSave[] = function($sender, User $entity)
+        {
+            $this->flashMessage("Uživatel {$entity->getFullNameWithNickname()} úspěšně uložen", 'success');
+            $this->isAjax() ? $this->redrawControl() : $this->redirect('this');
+        };
+        return $control;
+    }
     
 }

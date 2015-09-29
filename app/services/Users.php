@@ -13,6 +13,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\AbstractQuery;
 use Kdyby\Doctrine\EntityManager;
 use Kdyby\Persistence\Query;
+use Kdyby\Doctrine\QueryException;
 use Nette\Object;
 
 class Users extends Object
@@ -29,11 +30,12 @@ class Users extends Object
     }
 
 
-    public function findAll()
-    {
-        $dql = $this->em->createQuery('SELECT u FROM app:User u');
-        return $dql->iterate();
-    }
+//    public function findAll()
+//    {
+//        $dql = $this->em->createQuery('SELECT u FROM app:User u');
+//        $dql->setCacheable(true);
+//        return $dql->getResult();
+//    }
 
     public function createUser($email, $password)
     {
@@ -51,7 +53,18 @@ class Users extends Object
         }
 
         return $user;
+    }
 
+
+    /**
+     * @param \Kdyby\Persistence\Query|\Kdyby\Doctrine\QueryObject $queryObject
+     * @param int $hydrationMode
+     * @throws QueryException
+     * @return array|\Kdyby\Doctrine\ResultSet
+     */
+    public function fetch(Query $queryObject, $hydrationMode = AbstractQuery::HYDRATE_OBJECT)
+    {
+        return $this->repository->fetch($queryObject, $hydrationMode);
     }
 
 
