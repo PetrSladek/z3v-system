@@ -10,8 +10,8 @@ namespace App\Query;
 
 use App\Model\Participation;
 use App\Model\Race;
+use App\Model\User;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\Tests\Models\NonPublicSchemaJoins\User;
 use Kdyby\Persistence\Queryable;
 
 /**
@@ -25,7 +25,7 @@ class UsersQuery extends BaseQuery {
 
     /**
      * Najde uivatele podle závodu kterého se úèastní
-     * @param $varSymbol
+     * @param Race $race
      * @return $this
      */
     public function participationOnRace(Race $race)
@@ -40,7 +40,7 @@ class UsersQuery extends BaseQuery {
 
     /**
      * Najde uivatele podle závodu kterého se neúèastní
-     * @param $varSymbol
+     * @param Race $race
      * @return $this
      */
     public function notParticipationOnRace(Race $race)
@@ -63,8 +63,10 @@ class UsersQuery extends BaseQuery {
 
 
 
-
-
+    /**
+     * @param Queryable $repository
+     * @return \Kdyby\Doctrine\QueryBuilder
+     */
     protected function createBasicDql(Queryable $repository)
     {
         $qb = $repository->createQueryBuilder()

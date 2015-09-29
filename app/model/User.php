@@ -179,6 +179,21 @@ class User implements IIdentity
             : $this->getFullName();
     }
 
+
+
+    /**
+     * Nastavi jméno
+     * @param      $name
+     * @param      $surname
+     * @param null $nickname
+     */
+    public function setFullName($name, $surname, $nickname = null)
+    {
+        $this->name = $name;
+        $this->surname = $surname;
+        $this->nickname = $nickname;
+    }
+
     /**
      * @return string
      */

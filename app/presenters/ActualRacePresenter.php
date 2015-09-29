@@ -126,7 +126,7 @@ class ActualRacePresenter extends BaseAuthPresenter
     public function handleToggleMemberPayment($memberId)
     {
         /** @var RacerParticipation $member */
-        $member = $this->em->find(RacerParticipation::class, $memberId);
+        $member = $this->em->getReference(RacerParticipation::class, $memberId);
         $this->pairs->toggleMemberPayment($member);
 
         $this->isAjax() ? $this->redrawControl() : $this->redirect('this');

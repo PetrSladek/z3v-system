@@ -48,20 +48,25 @@ class MemberPaymentListener extends Object implements Subscriber
      */
     public function postUpdate(LifecycleEventArgs  $args)
     {
+        if (!($args->getEntity() instanceof RacerParticipation))
+            return;
 
-        if ($args->getEntity() instanceof RacerParticipation) {
-            /** @var RacerParticipation $member */
-            $member = $args->getEntity();
-            $pair = $member->getPair();
+        /** @var RacerParticipation $member */
+        $member = $args->getEntity();
 
-            // TODO udělat to jedním SQLkem
-            if(!$pair->hasStartNumber() && $pair->isPaid())
-            {
-                $startNumber = $this->pairs->getNextStartNumber($pair->getRace());
-                $pair->setStartNumber($startNumber);
-                $args->getEntityManager()->flush($pair);
-            }
+        // Pokud neni zaplacenej, urcite neni zaplacena cela jeho skupina
+        if(!$member->isPaid())
+            return;
+
+//        $this->pairs->tryAssignStartNumber($member->getPair());
+        $pair = $member->getPair();
+        if(!$pair->hasStartNumber() && $pair->isPaid())
+        {
+            $startNumber = $this->pairs->getNextStartNumber($pair->getRace());
+            $pair->setStartNumber($startNumber);
+            $args->getEntityManager()->flush($pair);
         }
+
     }
 
 }

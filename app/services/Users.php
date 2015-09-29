@@ -10,7 +10,9 @@ use App\Model\Authenticator;
 use App\Model\DuplicateEmailException;
 use App\Model\User;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\ORM\AbstractQuery;
 use Kdyby\Doctrine\EntityManager;
+use Kdyby\Persistence\Query;
 use Nette\Object;
 
 class Users extends Object
@@ -48,6 +50,21 @@ class Users extends Object
             throw new DuplicateEmailException;
         }
 
+        return $user;
+
+    }
+
+
+
+    /**
+     * @param Query $queryObject
+     * @param int   $hydrationMode
+     *
+     * @return array|\Kdyby\Doctrine\ResultSet
+     */
+    public function fetch(Query $queryObject, $hydrationMode = AbstractQuery::HYDRATE_OBJECT)
+    {
+        return $this->repository->fetch($queryObject, $hydrationMode);
     }
 
 }

@@ -3,6 +3,7 @@
 namespace App\Forms;
 
 use App\Forms\Base\BaseEntityForm;
+use App\Forms\Base\BaseModalForm;
 use App\Forms\Base\Form;
 use App\Model\Address;
 use App\Model\User;
@@ -15,7 +16,7 @@ use Nette\Forms\Controls\BaseControl;
  * @package App\Forms
  * @property User|null $entity
  */
-class UserForm extends BaseEntityForm
+class UserForm extends BaseModalForm
 {
 
     /**
@@ -24,60 +25,10 @@ class UserForm extends BaseEntityForm
     protected $entityClass = User::class;
 
     /**
-     * Vykreslit otevřený modal?
-     * @var bool
-     * @persistent
+     * @var string Soubor s šablonou
      */
-    public $renderModal = false;
+    protected $templateFile = 'templates/userForm.latte';
 
-    /**
-     * @var int
-     * @persistent
-     */
-    public $id;
-
-    protected function attached($presenter)
-    {
-        parent::attached($presenter);
-
-        if($this->id)
-            $this->load($this->id);
-    }
-
-    public function load($id)
-    {
-        $this->entity = $this->em->find($this->entityClass, $id);
-        if(!$this->entity)
-            throw new EntityNotFoundException;
-    }
-
-
-    /**
-     * Vykreslení formu do modalu
-     */
-    public function render()
-    {
-        $this->template->setFile(__DIR__.'/templates/userForm.latte');
-        $this->template->renderModal = $this->renderModal;
-        $this->template->entity = $this->entity;
-
-        $this->redrawControl();
-        $this->template->render();
-    }
-
-    /**
-     * Otevře modal a do něj entitu podle ID
-     * @param $id
-     * @throws EntityNotFoundException
-     */
-    public function handleOpen($id = null)
-    {
-        if($id)
-            $this->load($id);
-
-        $this->renderModal = true;
-        $this->redrawControl();
-    }
 
 
     /**
@@ -120,11 +71,6 @@ class UserForm extends BaseEntityForm
 
 		$frm->addSubmit('send', 'Uložit');
 
-        $frm->onSuccess[] = function()
-        {
-            $this->presenter->payload->modalClose = true;
-            $this->renderModal = false;
-        };
 		$frm->onSuccess[] = [$this, 'formSuccess'];
 
 		if($this->entity)

@@ -16,9 +16,11 @@ use App\Model\Pair;
 use App\Model\Race;
 use App\Model\User;
 use App\Query\PairsQuery;
+use App\Query\UsersQuery;
 use App\Services\Pairs;
 use App\Services\Races;
 use App\Services\Users;
+use Kdyby\Doctrine\ResultSet;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Strings;
 
@@ -39,16 +41,11 @@ class UsersPresenter extends BaseAuthPresenter
     public $userFormFactory;
 
 
-//    /**
-//     * @var IRaceFormFactory
-//     * @inject
-//     */
-//    public $raceFormFactory;
-
     /**
-     * @var User[]
+     * @var ResultSet|User[]
      */
     private $list;
+
 
     public function actionDefault()
     {
@@ -56,7 +53,7 @@ class UsersPresenter extends BaseAuthPresenter
 
     public function renderDefault()
     {
-        $this->list = $this->list ?: $this->users->findAll();
+        $this->list = $this->list ?: $this->users->fetch( new UsersQuery() );
         $this->template->users = $this->list;
     }
 

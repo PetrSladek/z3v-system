@@ -42,6 +42,19 @@ class Pairs extends Object
         return (int) $query->getSingleScalarResult() + 1;
     }
 
+//    public function tryAssignStartNumber(Pair $pair)
+//    {
+//        $query = $this->em->createQuery("
+//            UPDATE app:Pair pa
+//            SET pa.startNumber = (SELECT MAX(pp.startNumber) FROM app:Pair pp WHERE pp.race = pa.race)
+//            WHERE pa = :pair
+//              AND pa.startNumber IS NULL
+//              AND NOT EXISTS (SELECT rp.paid FROM app:RacerParticipation rp WHERE rp.paid = 0 AND rp.pair = pa)
+//        ");
+//        $query->setParameter('pair',$pair);
+//        $query->execute();
+//    }
+
     /**
      * Vytvoří pár pro daný závod
      * @param Race $race

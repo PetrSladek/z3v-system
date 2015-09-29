@@ -2,7 +2,7 @@
 
 namespace App\Forms;
 
-use App\Forms\Base\BaseEntityForm;
+use App\Forms\Base\BaseModalForm;
 use App\Model\Checkpoint;
 use App\Model\Race;
 use Kdyby\Doctrine\EntityManager;
@@ -15,7 +15,7 @@ use Zend\Stdlib\Hydrator\HydratorInterface;
  * @package App\Forms
  * @property Checkpoint|null $entity
  */
-class CheckpointForm extends BaseEntityForm
+class CheckpointForm extends BaseModalForm
 {
 
     /**
@@ -23,6 +23,10 @@ class CheckpointForm extends BaseEntityForm
      */
     protected $entityClass = Checkpoint::class;
 
+    /**
+     * @var string Soubor s šablonou
+     */
+    protected $templateFile = 'templates/checkpointForm.latte';
 
     /**
      * @var Race Závod do kterého se přidá stanoviště;

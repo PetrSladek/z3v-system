@@ -48,8 +48,8 @@ class PairsQuery extends BaseQuery {
             $sub->select('rp.paid')
                 ->from(RacerParticipation::class, 'rp')
                 ->andWhere('rp.paid = 0')
-                ->andWhere('rp.pair = p')
-                ->groupBy('rp.pair');
+                ->andWhere('rp.pair = p');
+//                ->groupBy('rp.pair');
 
             $expr = $qb->expr()->not( $qb->expr()->exists($sub->getDQL()) );
             $qb->andWhere( $expr );

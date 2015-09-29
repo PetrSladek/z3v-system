@@ -6,7 +6,6 @@
 
 namespace App\Forms\Base;
 
-
 use Nette;
 use Nette\Forms\Controls;
 
