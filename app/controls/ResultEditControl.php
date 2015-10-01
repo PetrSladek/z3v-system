@@ -86,6 +86,9 @@ class ResultEditControl extends Control
     public function render()
     {
         $this->template->setFile(__DIR__.'/resultEditControl.latte');
+
+        $this->template->result = $this->result;
+
         $this->template->render();
     }
 

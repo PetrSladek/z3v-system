@@ -89,14 +89,16 @@ class Pair
         $this->results = new ArrayCollection();
     }
 
-    public function addMember(RacerParticipation $participation) {
+    public function addMember(RacerParticipation $participation)
+    {
         $this->members->add( $participation );
     }
 
     /**
      * @return array|RacerParticipation[]
      */
-    public function getMembers() {
+    public function getMembers()
+    {
         return $this->members->toArray();
     }
 
@@ -117,7 +119,8 @@ class Pair
      * @param Participation $participation
      * @return RacerParticipation
      */
-    public function getOtherOne(RacerParticipation $participation) {
+    public function getOtherOne(RacerParticipation $participation)
+    {
         return $this->getOthers($participation)->first();
     }
 
@@ -133,6 +136,7 @@ class Pair
         $participation = $this->members->matching($criteria)->first();
         if(!$participation)
             throw new \InvalidArgumentException("User is not in this pair!");
+
         return $participation;
     }
 
@@ -154,7 +158,8 @@ class Pair
      * Vrátí prvního z dvojice (ten kdo ji zakládal)
      * @return RacerParticipation|null
      */
-    public function getFirstMember() {
+    public function getFirstMember()
+    {
         return $this->members->get(0);
     }
 
@@ -163,7 +168,8 @@ class Pair
      * Vrátí druhého z dvojice (ten kdo pozvání přijal)
      * @return RacerParticipation|null
      */
-    public function getSecondMember() {
+    public function getSecondMember()
+    {
         return $this->members->get(1);
     }
 
@@ -175,6 +181,10 @@ class Pair
      */
     public function checkIn(Checkpoint $checkpoint, DateTime $datetime)
     {
+        if($checkpoint->getRace() != $this->getRace())
+        {
+            throw new \InvalidArgumentException("Stanoviště není ze stejného ročníku závodu jako dvojice");
+        }
 
         $result = $this->getResultOn($checkpoint);
         if ($result)
@@ -198,6 +208,11 @@ class Pair
      */
     public function startActivity(Checkpoint $checkpoint, DateTime $datetime)
     {
+        if($checkpoint->getRace() != $this->getRace())
+        {
+            throw new \InvalidArgumentException("Stanoviště není ze stejného ročníku závodu jako dvojice");
+        }
+
         $result = $this->getResultOn($checkpoint);
         if ($result)
         {
@@ -221,6 +236,11 @@ class Pair
      */
     public function checkOut(Checkpoint $checkpoint, DateTime $datetime, $points)
     {
+        if($checkpoint->getRace() != $this->getRace())
+        {
+            throw new \InvalidArgumentException("Stanoviště není ze stejného ročníku závodu jako dvojice");
+        }
+
         $result = $this->getResultOn($checkpoint);
         if (!$result)
         {
@@ -246,6 +266,64 @@ class Pair
     }
 
 
+    /**
+     * Vrátí čas na trati (počet vteřin), null pokud zavod nedokoncili
+     * @return int|null
+     */
+    public function getTotalTrackTime()
+    {
+        if(!$this->getDateStart() || $this->getDateFinish())
+        {
+            return null;
+        }
+
+        return $this->getDateFinish()->getTimestamp() - $this->getDateStart()->getTimestamp();
+    }
+
+
+    /**
+     * Vrátí celkový čas čekaček (počet vteřin)
+     * @return int
+     */
+    public function getTotalWaitingTime()
+    {
+        $totalWaitingTime = 0;
+
+        $this->results->forAll(function($_, Result $result) use (&$totalWaitingTime)
+        {
+            $totalWaitingTime += $result->getWaitingTime();
+            return true;
+        });
+
+        return $totalWaitingTime;
+    }
+
+
+    /**
+     * Vrátí celkový čas penalizace (počet vteřin)
+     * @return int
+     */
+    public function getTotalPenalization()
+    {
+        $totalPenalizationTime = 0;
+        $this->results->forAll(function($_, Result $result) use (&$totalPenalizationTime)
+        {
+            $totalPenalizationTime += $result->getPenalizationTime();
+            return true;
+        });
+        return $totalPenalizationTime;
+    }
+
+
+    /**
+     * Vrátí celkový výsledný čas závodu (počet vteřin)
+     * Se započítanou penalizací a čekačkama
+     */
+    public function getResultTime()
+    {
+        return (int) $this->getTotalTrackTime() - (int) $this->getTotalWaitingTime() + (int) $this->getTotalPenalization();
+    }
+
 
     /**
      * Je za všechny zaplacené?
@@ -257,6 +335,7 @@ class Pair
         $criteria = Criteria::create()->where( Criteria::expr()->eq('paid', false ));
         return $this->members->matching($criteria)->isEmpty();
     }
+
 
     /**
      * Je zaplaceno alespon za někoho, ale ne za všechny?
@@ -280,6 +359,7 @@ class Pair
         return $this->startNumber !== null;
     }
 
+
     /**
      * @return int
      */
@@ -287,6 +367,7 @@ class Pair
     {
         return $this->startNumber;
     }
+
 
     /**
      * @param int $startNumber
@@ -305,6 +386,7 @@ class Pair
         $this->race = $race;
     }
 
+
     /**
      * @return Race
      */
@@ -312,7 +394,6 @@ class Pair
     {
         return $this->race;
     }
-
 
 
     /**
@@ -323,6 +404,7 @@ class Pair
         return $this->arrived;
     }
 
+
     /**
      * @param boolean $arrived
      */
@@ -330,6 +412,7 @@ class Pair
     {
         $this->arrived = $arrived;
     }
+
 
     /**
      * @return DateTime
@@ -339,6 +422,7 @@ class Pair
         return $this->dateStart;
     }
 
+
     /**
      * @param DateTime $dateStart
      */
@@ -346,6 +430,7 @@ class Pair
     {
         $this->dateStart = $dateStart;
     }
+
 
     /**
      * @return DateTime
@@ -355,6 +440,7 @@ class Pair
         return $this->dateFinish;
     }
 
+
     /**
      * @param DateTime $dateFinish
      */
@@ -362,6 +448,7 @@ class Pair
     {
         $this->dateFinish = $dateFinish;
     }
+
 
     /**
      * @return string
@@ -371,6 +458,7 @@ class Pair
         return $this->chipId;
     }
 
+
     /**
      * @param string $chipId
      */
@@ -378,6 +466,7 @@ class Pair
     {
         $this->chipId = $chipId;
     }
+
 
     /**
      * @return string
@@ -387,6 +476,7 @@ class Pair
         return $this->internalNote;
     }
 
+
     /**
      * @param string $internalNote
      */
@@ -394,8 +484,6 @@ class Pair
     {
         $this->internalNote = $internalNote;
     }
-
-
 
 
 }

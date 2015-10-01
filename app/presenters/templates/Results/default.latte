@@ -1,0 +1,72 @@
+{block content}
+
+<table class="table table-tbody-striped table-bordered">
+	<thead>
+		<tr>
+			<th>Pořadí</th>
+			<th>Startovní číslo</th>
+			<th>Jméno (přezdívka)</th>
+			<th>Čas start</th>
+			<th>Čas cíl</th>
+			<th>Na trati</th>
+			<th>Doba čekání</th>
+			<th>Čas celkem</th>
+			{foreach $checkpoints as $checkpoint}
+			<th>
+				Stanoviště {$checkpoint->getNumber()}<br />
+				<small>{$checkpoint->getName()}</small>
+			</th>
+			{/foreach}
+			<th>Výsledný čas</th>
+		</tr>
+	</thead>
+	{foreach $pairs as $pair}
+	<tbody>
+		<tr>
+			<td rowspan="2">
+
+			</td>
+			<td rowspan="2">
+				{$pair->getStartNumber() ?: 'nepřiřazeno'}
+			</td>
+			<td>
+				{$pair->getFirstMember()->getUser()->getFullNameWithNickname()}
+			</td>
+			<td rowspan="2" n:inner-if="$pair->getDateStart()">
+				{$pair->getDateStart()->format('j.n.Y')}<br />
+				{$pair->getDateStart()->format('H:i')}
+			</td>
+			<td rowspan="2" n:inner-if="$pair->getDateFinish()">
+				{$pair->getDateFinish()->format('j.n.Y')}<br />
+				{$pair->getDateFinish()->format('H:i')}
+			</td>
+			<td rowspan="2">
+				{$pair->getTotalTrackTime()}
+			</td>
+			<td rowspan="2">
+				{$pair->getTotalWaitingTime()}
+			</td>
+			<td rowspan="2">
+				{=$pair->getTotalTrackTime()-$pair->getTotalWaitingTime()}
+			</td>
+			{foreach $checkpoints as $checkpoint}
+			{var $result = $pair->getResultOn($checkpoint)}
+			<td rowspan="2" n:inner-if="$result">
+				{$result->getPenalizationTime()}<br />
+				<small>{$result->getPoints()} * {$checkpoint->getCoefficient()}</small>
+			</td>
+			{/foreach}
+			<td rowspan="2">
+				{$pair->getResultTime()}
+			</td>
+		</tr>
+		<tr>
+			<td>
+				{$pair->getSecondMember()->getUser()->getFullNameWithNickname()}
+			</td>
+		</tr>
+	</tbody>
+	{/foreach}
+<table>
+
+{/block}

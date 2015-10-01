@@ -76,6 +76,32 @@ class Result
         $this->points = $points;
     }
 
+
+    /**
+     * Čekací doba
+     * @result null|int
+     */
+    public function getWaitingTime()
+    {
+        if(!$this->checkIn || !$this->startAt)
+        {
+            return null;
+        }
+
+        return $this->startAt->getTimestamp() - $this->checkIn->getTimestamp();
+    }
+
+
+    /**
+     * Vrátí čas penalizace (počet vteřin)
+     * @return float
+     */
+    public function getPenalizationTime()
+    {
+        return $this->getCheckpoint()->getCoefficient() * $this->getPoints() * 60;
+    }
+
+
     /**
      * @return DateTime
      */
