@@ -2,7 +2,7 @@
 
 namespace App\Presenters;
 
-use App\Controls\ResultEditControl\ResultEditControl;
+use App\Controls\IResultEditControlFactory;
 use App\Model\Pair;
 use App\Model\Checkpoint;
 use App\Query\PairsQuery;
@@ -13,6 +13,12 @@ use Nette\Application\UI\Multiplier;
 
 class TimesPresenter extends BaseAuthPresenter
 {
+
+    /**
+     * @var IResultEditControlFactory
+     * @inject
+     */
+    public $resultEditControlFactory;
 
     /**
      * @var Pairs
@@ -26,6 +32,7 @@ class TimesPresenter extends BaseAuthPresenter
         $query->fromRace($this->race);
         $query->withMembers();
         $query->onlyArrived();
+        $query->withResults();
 
     	$this->template->pairs = $this->pairs->fetch($query);
         $this->template->checkpoints = $this->race->getCheckpoints();
@@ -34,11 +41,22 @@ class TimesPresenter extends BaseAuthPresenter
 
     public function createComponentResultEdit()
     {
-        return new Multiplier(function ($pairId) {
+        return new Multiplier(function ($pairId)
+        {
             $pair = $this->em->getReference(Pair::class, $pairId);
-            return new Multiplier(function($checkpointId) use ($pair) {
+            return new Multiplier(function($checkpointId) use ($pair)
+            {
                 $checkpoint = $this->em->getReference(Checkpoint::class, $checkpointId);
-                return new ResultEditControl($pair, $checkpoint);
+
+                $control = $this->resultEditControlFactory->create($pair, $checkpoint);
+                $control->onSave[] = function($sender, $result) use ($pair)
+                {
+                    $this->em->persist($pair)->flush();
+
+                    $this->flashMessage('Výsledky úspěšně uloženy');
+                    $this->isAjax() ? $this->redrawControl() : $this->redirect('this');
+                };
+                return $control;
             });
         });
     }

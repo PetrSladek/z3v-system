@@ -7,8 +7,12 @@
 namespace App\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use \DateTime;
+use Doctrine\Tests\ORM\Functional\OrderedJoinedTableInheritanceCollectionTest;
+use Nette\InvalidStateException;
 
 /**
  * @ORM\Entity
@@ -18,12 +22,6 @@ class Pair
     use \Kdyby\Doctrine\Entities\Attributes\Identifier; // Using Identifier trait for id column
 
     /**
-     * @ORM\Column(type="integer", nullable=TRUE)
-     * @var integer
-     */
-    protected $startNumber;
-
-    /**
      * Závod ve kterém je tato dvojice registrovaná
      * @ORM\ManyToOne(targetEntity="Race", inversedBy="pairs")
      * @var Race
@@ -31,11 +29,10 @@ class Pair
     protected $race;
 
     /**
-     * Členové dvojice
-     * @ORM\OneToMany(targetEntity="RacerParticipation", mappedBy="pair")
-     * @var ArrayCollection
+     * @ORM\Column(type="integer", nullable=TRUE)
+     * @var integer
      */
-    protected $members;
+    protected $startNumber;
 
     /**
      * Prijeli na zavod?
@@ -46,13 +43,13 @@ class Pair
     
     /**
      * @ORM\Column(type="datetime", nullable=TRUE)
-     * @var \DateTime
+     * @var DateTime
      */
     protected $dateStart;
 
     /**
      * @ORM\Column(type="datetime", nullable=TRUE)
-     * @var \DateTime
+     * @var DateTime
      */
     protected $dateFinish;
 
@@ -70,11 +67,26 @@ class Pair
      */
     protected $internalNote;
 
+    /**
+     * Členové dvojice
+     * @ORM\OneToMany(targetEntity="RacerParticipation", mappedBy="pair")
+     * @var RacerParticipation[]|Collection
+     */
+    protected $members;
+
+    /**
+     * Výsledky této dvojice
+     * @ORM\OneToMany(targetEntity="Result", mappedBy="pair", cascade={"persist"})
+     * @var Result[]|Collection
+     */
+    protected $results;
+
 
     public function __construct(Race $race)
     {
         $this->race = $race;
         $this->members = new ArrayCollection();
+        $this->results = new ArrayCollection();
     }
 
     public function addMember(RacerParticipation $participation) {
@@ -154,6 +166,85 @@ class Pair
     public function getSecondMember() {
         return $this->members->get(1);
     }
+
+    /**
+     * Vytvoří/edituje checkin na dvojice na zadaném stanovišti
+     * @param Checkpoint $checkpoint
+     * @param DateTime $datetime
+     * @return $this
+     */
+    public function checkIn(Checkpoint $checkpoint, DateTime $datetime)
+    {
+
+        $result = $this->getResultOn($checkpoint);
+        if ($result)
+        {
+            $result->setCheckIn($datetime);
+        }
+        else
+        {
+            $result = new Result($this, $checkpoint, $datetime);
+            $this->results->add($result);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Vytvoří/edituje checkin na dvojice na zadaném stanovišti
+     * @param Checkpoint $checkpoint
+     * @param DateTime $datetime
+     * @return $this
+     */
+    public function startActivity(Checkpoint $checkpoint, DateTime $datetime)
+    {
+        $result = $this->getResultOn($checkpoint);
+        if ($result)
+        {
+            $result->setStartAt($datetime);
+        }
+        else
+        {
+            $result = new Result($this, $checkpoint, $datetime, $datetime);
+            $this->results->add($result);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Vytvoří/edituje checkin na dvojice na zadaném stanovišti
+     * @param Checkpoint $checkpoint
+     * @param DateTime $datetime
+     * @param int $points Počet bodů
+     * @return $this
+     */
+    public function checkOut(Checkpoint $checkpoint, DateTime $datetime, $points)
+    {
+        $result = $this->getResultOn($checkpoint);
+        if (!$result)
+        {
+            throw new InvalidStateException('Dvojice nemuze udělat Check-out, pokud neprovedla Check-in');
+        }
+
+        $result->setCheckOut($datetime);
+        $result->setPoints($points);
+
+        return $this;
+    }
+
+
+    /**
+     * Vrátí výsledek na zadaném stanovišti (pokud existuje)
+     * @param Checkpoint $checkpoint
+     * @return false|Result
+     */
+    public function getResultOn(Checkpoint $checkpoint)
+    {
+        $criteria = Criteria::create()->where( Criteria::expr()->eq('checkpoint', $checkpoint ));
+        return $this->results->matching($criteria)->first();
+    }
+
 
 
     /**
@@ -241,7 +332,7 @@ class Pair
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateStart()
     {
@@ -249,7 +340,7 @@ class Pair
     }
 
     /**
-     * @param \DateTime $dateStart
+     * @param DateTime $dateStart
      */
     public function setDateStart($dateStart)
     {
@@ -257,7 +348,7 @@ class Pair
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateFinish()
     {
@@ -265,7 +356,7 @@ class Pair
     }
 
     /**
-     * @param \DateTime $dateFinish
+     * @param DateTime $dateFinish
      */
     public function setDateFinish($dateFinish)
     {

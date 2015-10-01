@@ -4,10 +4,10 @@
  * @author: Petr Sládek <petr.sladek@skaut.cz>
  */
 
-namespace app\model;
+namespace App\Model;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nette\Utils\DateTime;
+use \DateTime;
 
 /**
  * @ORM\Entity
@@ -18,20 +18,34 @@ class Result
 
 
     /**
+     * Stanoviště, na kterém je výsledek zadán
+     * @ORM\ManyToOne(targetEntity="Checkpoint", inversedBy="results")
+     * @var Checkpoint
+     */
+    protected $checkpoint;
+
+    /**
+     * Dvojice, ke které výsledek patří
+     * @ORM\ManyToOne(targetEntity="Pair", inversedBy="results")
+     * @var Race
+     */
+    protected $pair;
+
+    /**
      * @ORM\Column(type="datetime", nullable=TRUE)
-     * @var DateTime
+     * @var \DateTime
      */
     protected $checkIn;
 
     /**
      * @ORM\Column(type="datetime", nullable=TRUE)
-     * @var DateTime
+     * @var \DateTime
      */
     protected $startAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=TRUE)
-     * @var DateTime
+     * @var \DateTime
      */
     protected $checkOut;
 
@@ -44,13 +58,18 @@ class Result
 
     /**
      * Result constructor.
-     * @param DateTime $checkIn
-     * @param DateTime $startAt
-     * @param DateTime $checkOut
+     * @param Checkpoint $checkpoint
+     * @param Pair $pair
+     * @param \DateTime $checkIn
+     * @param \DateTime $startAt
+     * @param \DateTime $checkOut
      * @param int $points
      */
-    public function __construct(DateTime $checkIn, DateTime $startAt = null, DateTime $checkOut = null, $points = 0)
+    public function __construct(Pair $pair, Checkpoint $checkpoint, \DateTime $checkIn, \DateTime $startAt = null, \DateTime $checkOut = null, $points = 0)
     {
+        $this->pair = $pair;
+        $this->checkpoint = $checkpoint;
+
         $this->checkIn = $checkIn;
         $this->startAt = $startAt;
         $this->checkOut = $checkOut;
@@ -68,7 +87,7 @@ class Result
     /**
      * @param DateTime $checkIn
      */
-    public function setCheckIn($checkIn)
+    public function setCheckIn(DateTime $checkIn)
     {
         $this->checkIn = $checkIn;
     }
@@ -119,6 +138,23 @@ class Result
     public function setPoints($points)
     {
         $this->points = $points;
+    }
+
+
+    /**
+     * @return Checkpoint
+     */
+    public function getCheckpoint()
+    {
+        return $this->checkpoint;
+    }
+
+    /**
+     * @return Race
+     */
+    public function getPair()
+    {
+        return $this->pair;
     }
 
 

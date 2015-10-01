@@ -6,6 +6,7 @@
 
 namespace App\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -50,6 +51,11 @@ class Checkpoint
      */
     protected $manager;
 
+    /**
+     * Výsledky na tomto stanovišti
+     * @ORM\OneToMany(targetEntity="Result", mappedBy="checkpoint")
+     */
+    protected $results;
 
     /**
      * Checkpoint constructor.
@@ -59,6 +65,7 @@ class Checkpoint
      */
     public function __construct(Race $race, $number, $name)
     {
+        $this->results = new ArrayCollection();
         $this->race = $race;
         $this->number = $number;
         $this->name = $name;

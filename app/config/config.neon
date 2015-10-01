@@ -23,8 +23,8 @@ doctrine:
 	    app: App\Model
 	metadata:
 		App: %appDir%
-	metadataCache: xcache
-	queryCache: xcache
+#	metadataCache: xcache
+#	queryCache: xcache
 
 #annotations:
 #	cache: apc
@@ -65,6 +65,8 @@ services:
 	- App\Forms\IPairAddFormFactory
 	- App\Forms\ICheckpointFormFactory
 	- App\Forms\IRaceFormFactory
+
+	- App\Controls\IResultEditControlFactory
 
 	- App\Services\Races
 	- App\Services\Pairs
