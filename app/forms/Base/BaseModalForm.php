@@ -8,7 +8,7 @@ use Nette\Application\UI\Form;
 abstract class BaseModalForm extends BaseEntityForm
 {
 	/**
-	 * Vykreslit otevøený modal?
+	 * Vykreslit otevï¿½enï¿½ modal?
 	 * @var bool
 	 * @persistent
 	 */
@@ -22,7 +22,7 @@ abstract class BaseModalForm extends BaseEntityForm
 
 
 	/**
-	 * @var string Soubor s šablonou
+	 * @var string Soubor s ï¿½ablonou
 	 */
 	protected $templateFile = 'templates/form.latte';
 
@@ -76,7 +76,7 @@ abstract class BaseModalForm extends BaseEntityForm
 
 
 	/**
-	 * Vykreslení formu do modalu
+	 * VykreslenÃ­ formu do modalu
 	 */
 	public function render()
 	{
@@ -86,8 +86,19 @@ abstract class BaseModalForm extends BaseEntityForm
 		$this->template->render();
 	}
 
+
+    /**
+     * VykreslÃ­ pouze formulÃ¡Å™ bez modalu
+     */
+    public function renderForm()
+    {
+        $this['form']->render();
+    }
+
+
+
 	/**
-	 * Otevøe modal a do nìj entitu podle ID
+	 * Otevï¿½e modal a do nï¿½j entitu podle ID
 	 * @param $id
 	 * @throws EntityNotFoundException
 	 */

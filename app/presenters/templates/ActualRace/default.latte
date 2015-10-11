@@ -28,6 +28,7 @@
 			<td>
 				{$pair->getFirstMember()->getUser()->getFullNameWithNickname()}
 				<br /><a n:href="frmUser-open! 'frmUser-id'=>$pair->getFirstMember()->getUser()->getId()" class="ajax btn btn-xs btn-default">Editovat</a>
+				{*<br /><a n:href="frmUser-open! 'frmUser-id'=>$pair->getFirstMember()->getUser()->getId()" class="ajax btn btn-xs btn-default ladda-button" data-style="expand-right" data-size="xs"><span class="ladda-label">Editovat</span></a>*}
 			</td>
 			<td>
 				{$pair->getFirstMember()->getUser()->getTshirt()}

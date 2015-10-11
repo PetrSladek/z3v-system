@@ -381,7 +381,10 @@ class User implements IIdentity
      */
     public function getRoles()
     {
-        return array();
+        if ($this->email == 'peggy@skaut.cz')
+            return ['admin'];
+
+        return ['user'];
     }
 
 }

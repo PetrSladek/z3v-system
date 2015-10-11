@@ -10,11 +10,16 @@ use App\Forms\SignFormFactory;
 
 class SignPresenter extends BasePresenter
 {
+
+    /** @persistent */
+    public $backlink;
+
 	/** @var SignFormFactory @inject */
 	public $signInFormFactory;
 
     /** @var IUserRegistrationFormFactory @inject */
     public $userRegistrationFormFactory;
+
 
 	/**
 	 * Sign-in form factory.
@@ -24,10 +29,12 @@ class SignPresenter extends BasePresenter
 	{
 		$form = $this->signInFormFactory->create();
 		$form->onSuccess[] = function ($form) {
+            $this->restoreRequest($this->backlink);
 			$this->redirect('Homepage:');
 		};
 		return $form;
 	}
+
 
     /**
      * Registration form factory.
@@ -45,8 +52,9 @@ class SignPresenter extends BasePresenter
     }
 
 
-
-
+    /**
+     * Odhlášení
+     */
 	public function actionOut()
 	{
 		$this->getUser()->logout();

@@ -5,6 +5,7 @@ namespace App\Presenters;
 use Kdyby\Doctrine\EntityManager;
 use App\Model\User;
 use Nette\InvalidStateException;
+use Nette\Security\IUserStorage;
 
 
 /**
@@ -19,13 +20,30 @@ abstract class BaseAuthPresenter extends BasePresenter
      */
     public $em;
 
+    /**
+     * Pri spusteni kazdeho presenteru dediciho od BaseAuth
+     */
     protected function startup()
     {
         parent::startup();
         // pokud neni prihlaseny tak ho presmerujeme pryc
-        if(!$this->getUser()->isLoggedIn()) {
-            $this->flashMessage('Musíte se nejprve přihlásit.');
-            $this->redirect('Sign:in');
+        if (!$this->getUser()->isLoggedIn())
+        {
+
+            if ($this->getUser()->getLogoutReason() === IUserStorage::INACTIVITY)
+            {
+                $this->flashMessage('Byl jste z důvodu dlouhé neaktivity odhlášen. Přihlašte se prosím znovu.');
+            }
+
+            $this->redirect('Sign:in', array(
+                'backlink' => $this->storeRequest()
+            ));
+        }
+
+        if (!$this->getUser()->isAllowed($this->name, $this->action))
+        {
+            $this->flashMessage('Access denied');
+            $this->redirect('Homepage:');
         }
 
         // nactu entitu prihlaseneho uzivatele

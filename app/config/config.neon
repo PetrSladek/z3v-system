@@ -76,4 +76,22 @@ services:
 	router: App\RouterFactory::createRouter
 	entityHydrator: Zend\Stdlib\Hydrator\ClassMethods
 	inflection: \Inflection
+	authorizator:
+		class: Nette\Security\Permission
+		setup:
+			- addRole('user')           # normální přihlášený uživatel (závodník nebo ST)
+#			- addRole('serviceteam')    # uživatel s přístupem do širší administrace pro čtení
+			- addRole('admin')          # administr8tor
+			- addResource('Homepage')
+			- addResource('ActualRace')
+			- addResource('Checkpoints')
+			- addResource('Pairs')
+			- addResource('Races')
+			- addResource('Results')
+			- addResource('Times')
+			- addResource('Users')
+			- allow('user', 'Homepage') # všecky akce na Homepage
+			- allow('user', 'Pairs') # všecky akce na Pairs
+			- allow('user', 'Results') # všecky akce na Results
+			- allow('admin') # všechny Resources a všechny jejich akce
 

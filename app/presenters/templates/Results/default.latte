@@ -1,5 +1,7 @@
 {block content}
 
+{*<a href="#" id="form-submit" class="btn btn-primary ladda-button" data-style="expand-right"><span class="ladda-label">Submit form</span></a>*}
+
 <table class="table table-tbody-striped table-bordered">
 	<thead>
 		<tr>
@@ -41,23 +43,23 @@
 				{$pair->getDateFinish()->format('H:i')}
 			</td>
 			<td rowspan="2">
-				{$pair->getTotalTrackTime()}
+				{$pair->getTotalTrackTime()|time}
 			</td>
 			<td rowspan="2">
-				{$pair->getTotalWaitingTime()}
+				{$pair->getTotalWaitingTime()|time}
 			</td>
 			<td rowspan="2">
-				{=$pair->getTotalTrackTime()-$pair->getTotalWaitingTime()}
+				{=$pair->getTotalTrackTime()-$pair->getTotalWaitingTime()|time}
 			</td>
 			{foreach $checkpoints as $checkpoint}
 			{var $result = $pair->getResultOn($checkpoint)}
 			<td rowspan="2" n:inner-if="$result">
-				{$result->getPenalizationTime()}<br />
+				{$result->getPenalizationTime()|time}<br />
 				<small>{$result->getPoints()} * {$checkpoint->getCoefficient()}</small>
 			</td>
 			{/foreach}
 			<td rowspan="2">
-				{$pair->getResultTime()}
+				{$pair->getResultTime()|time}
 			</td>
 		</tr>
 		<tr>

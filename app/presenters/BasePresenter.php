@@ -6,6 +6,7 @@ use App\Model\Participation;
 use App\Model\Race;
 use App\Model\User;
 use App\Services\Races;
+use Latte\Template;
 use Nette;
 
 
@@ -43,6 +44,21 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
             throw new \RuntimeException("One of race must be set as actual in database");
     }
 
+    /** @inheritdoc */
+    protected function createTemplate()
+    {
+        $template = parent::createTemplate();
+        // přidá filtr který převede počet vteřin na "3 h 05'"
+        $template->addFilter('time', function ($time) {
+            if($time instanceof \DateTime)
+                $time = $time->getTimestamp();
+
+            $time = (int) $time;
+
+            return ($time < 0 ? "- " : "") . gmdate("G\h i'", abs($time));
+        });
+        return $template;
+    }
 
     /**
      * Pred renderovanim sablony

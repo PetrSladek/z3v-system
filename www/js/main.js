@@ -1,3 +1,18 @@
+//$(function() {
+//    $('#form-submit').click(function(e){
+//        e.preventDefault();
+//        var l = Ladda.create(this);
+//        l.start();
+//        $.post("your-url",
+//            { data : data },
+//            function(response){
+//                console.log(response);
+//            }, "json")
+//            .always(function() { l.stop(); });
+//        return false;
+//    });
+//});
+
 
 $(function(){
 
@@ -88,6 +103,23 @@ $(function(){
 
     });
 
+    $.nette.ext('ladda', {
+        before: function (xhr, settings) {
+            if (settings.nette.el.is('.ladda-button'))
+            {
+                this.ladda = Ladda.create( settings.nette.el.get(0) );
+                this.ladda.start();
+            }
+        },
+        complete: function (xhr, status, settings) {
+            if (settings.nette.el.is('.ladda-button'))
+            {
+                this.ladda.stop();
+            }
+        }
+    }, {
+        ladda: null
+    });
 
     $.nette.ext('jq', {
         init: function() {

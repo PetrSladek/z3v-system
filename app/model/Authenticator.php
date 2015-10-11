@@ -50,20 +50,31 @@ class Authenticator extends Object implements IAuthenticator
 
         /** @var User $user */
 		$user = $repo->findOneBy(['email'=>$email]);
-		if (!$user) {
+        // neexistující email
+		if (!$user)
+        {
             throw new AuthenticationException('Tento email není zaregistrovaný.', self::IDENTITY_NOT_FOUND);
-        } elseif($user->getPassword() === strtoupper(hash('sha256', $password))) { // stare heslo kvuli z5ne kompatibilitě
+        }
+        // stare heslo kvuli z5ne kompatibilitě
+        elseif($user->getPassword() === strtoupper(hash('sha256', $password)))
+        {
             $user->setPassword( $this->hash($password) );
-		} elseif (!$this->verify($password, $user->getPassword())) {
+		}
+        // Špatné heslo
+        elseif (!$this->verify($password, $user->getPassword()))
+        {
 			throw new AuthenticationException('Špatné heslo.', self::INVALID_CREDENTIAL);
-		} elseif ($this->needsRehash($user->getPassword())) {
+		}
+        // je potřeba heslo přehashovat
+        elseif ($this->needsRehash($user->getPassword()))
+        {
 			$user->setPassword($this->hash($password));
 		}
 
 		$user->setLastLogin(new DateTime());
 		$this->em->flush();
 
-		// radsi vytahuju cerstvy data z DB vzdy na zacatku requestu (kvuli zmenam v administraci a tak)
+        // user implementuje IIdentity
 		return $user;
 	}
 
