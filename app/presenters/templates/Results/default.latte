@@ -22,11 +22,12 @@
 			<th>Výsledný čas</th>
 		</tr>
 	</thead>
+	{var $i = 1}
 	{foreach $pairs as $pair}
 	<tbody>
 		<tr>
 			<td rowspan="2">
-
+				{$i++}
 			</td>
 			<td rowspan="2">
 				{$pair->getStartNumber() ?: 'nepřiřazeno'}

@@ -4,6 +4,7 @@ namespace App\Forms;
 
 use App\Forms\Base\BaseModalForm;
 use App\Model\Checkpoint;
+use App\Model\Location;
 use App\Model\Race;
 use App\Services\Races;
 use Kdyby\Doctrine\EntityManager;
@@ -64,12 +65,18 @@ class CheckpointForm extends BaseModalForm
             ->setRequired()
             ->setDefaultValue(1)
             ->addRule($frm::FLOAT);
+        $frm->addText('location_lat', 'GPS Lat.')
+            ->addCondition($frm::FILLED)
+                ->addRule($frm::FLOAT);
+        $frm->addText('location_lng', 'GPS Lng.')
+            ->addCondition($frm::FILLED)
+                ->addRule($frm::FLOAT);
 
 		$frm->addSubmit('send', 'Uložit');
 
 		$frm->onSuccess[] = [$this, 'formSuccess'];
 
-		if($this->entity)
+		if ($this->entity)
         {
             $frm->setDefaults( $this->extract() );
         }
@@ -83,8 +90,12 @@ class CheckpointForm extends BaseModalForm
 		return $frm;
 	}
 
-    protected function extract() {
+    protected function extract()
+    {
         $defaults = $this->hydrator->extract($this->entity);
+        $defaults['location_lat'] = $this->entity->getLocation() ? $this->entity->getLocation()->getLat() : null;
+        $defaults['location_lng'] = $this->entity->getLocation() ? $this->entity->getLocation()->getLng() : null;
+
         return $defaults;
     }
 
@@ -99,6 +110,7 @@ class CheckpointForm extends BaseModalForm
 
     protected function hydrate($values)
     {
+        $values['location'] = new Location($values->location_lat, $values->location_lng);
         $this->hydrator->hydrate((array) $values, $this->entity);
     }
 
@@ -110,6 +122,7 @@ interface ICheckpointFormFactory
 {
     /**
      * @param Race $race Závod
+     * @param int|null $id
      * @return CheckpointForm
      */
 	function create(Race $race, $id = null);

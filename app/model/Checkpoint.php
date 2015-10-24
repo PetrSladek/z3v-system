@@ -58,6 +58,14 @@ class Checkpoint
     protected $results;
 
     /**
+     * Adresa
+     * @ORM\Embedded(class = "Location")
+     * @var Location
+     */
+    protected $location;
+
+
+    /**
      * Checkpoint constructor.
      * @param Race $race
      * @param int $number
@@ -70,6 +78,23 @@ class Checkpoint
         $this->number = $number;
         $this->name = $name;
     }
+
+    /**
+     * @return Location
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    /**
+     * @param Location $location
+     */
+    public function setLocation(Location $location)
+    {
+        $this->location = $location;
+    }
+
 
 
     /**

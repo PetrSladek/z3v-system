@@ -255,6 +255,15 @@ class Pair
 
 
     /**
+     * Vrátí počet začatých stanovišť
+     */
+    public function getCountStartedCheckpoints()
+    {
+        $criteria = Criteria::create()->where( Criteria::expr()->neq('startAt', null ));
+        return $this->results->matching($criteria)->count();
+    }
+
+    /**
      * Vrátí výsledek na zadaném stanovišti (pokud existuje)
      * @param Checkpoint $checkpoint
      * @return false|Result
