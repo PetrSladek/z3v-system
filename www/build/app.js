@@ -1,0 +1,1 @@
+!function(t){function e(r){if(o[r])return o[r].exports;var n=o[r]={exports:{},id:r,loaded:!1};return t[r].call(n.exports,n,n.exports,e),n.loaded=!0,n.exports}var o={};return e.m=t,e.c=o,e.p="build/",e(0)}([function(t,e,o){t.exports=o(1)},function(t,e){"use strict";document.getElementById("app-root");document.write("hello")}]);

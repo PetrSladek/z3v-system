@@ -19,6 +19,9 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ladda-bootstrap/0.9.4/ladda-themeless.min.css">
 	{*<link rel="stylesheet" href="https://raw.githubusercontent.com/smalot/bootstrap-datetimepicker/2.3.5/css/bootstrap-datetimepicker.min.css"> je v syle.css*}
 
+	<link href="/build/app.css?v=" rel="stylesheet" />
+
+
 	<meta name="viewport" content="width=device-width">
 	{block head}{/block}
 </head>
@@ -53,6 +56,9 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/ladda-bootstrap/0.9.4/ladda.min.js"></script>
 
 	<script src="{$basePath}/js/main.js"></script>
+
+	{*<script src="{$basePath}/build/app.js" type="text/javascript"></script>*}
+	<script src="//localhost:8888/build/app.js" type="text/javascript"></script>
 	{/block}
 </body>
 </html>

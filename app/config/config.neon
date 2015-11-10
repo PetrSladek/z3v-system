@@ -84,6 +84,7 @@ services:
 			- addRole('admin')          # administr8tor
 			- addResource('Homepage')
 			- addResource('ActualRace')
+			- addResource('ActualRaceLive')
 			- addResource('Checkpoints')
 			- addResource('Pairs')
 			- addResource('Races')

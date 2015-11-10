@@ -2,7 +2,8 @@ _wrap/
 .idea/
 log/*
 temp/*
-vendor/*
+vendor
+node_modules
 !.gitignore
 !.htaccess
 !web.config
