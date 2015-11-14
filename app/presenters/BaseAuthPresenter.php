@@ -2,9 +2,8 @@
 
 namespace App\Presenters;
 
+use App\Services\Notifications;
 use Kdyby\Doctrine\EntityManager;
-use App\Model\User;
-use Nette\InvalidStateException;
 use Nette\Security\IUserStorage;
 
 
@@ -19,6 +18,13 @@ abstract class BaseAuthPresenter extends BasePresenter
      * @inject
      */
     public $em;
+
+    /**
+     * @var Notifications
+     * @inject
+     */
+    public $notifications;
+
 
     /**
      * Pri spusteni kazdeho presenteru dediciho od BaseAuth
@@ -48,6 +54,13 @@ abstract class BaseAuthPresenter extends BasePresenter
 
         // nactu entitu prihlaseneho uzivatele
         $this->me = $this->getUser()->getIdentity();
+    }
+
+    protected function beforeRender()
+    {
+        parent::beforeRender();
+
+        $this->template->notifications = $this->notifications->findUserLastNotifications($this->me);
     }
 
 

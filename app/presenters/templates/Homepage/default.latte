@@ -1,127 +1,133 @@
 {block content}
-<div class="forms">
-	<h1 n:block=title>Nástěnka</h1>
 
-	<h2>{$me->getFullName()}</h2>
+<div class="row">
 
-	<div class="row">
-		<div class="col-sm-6">
+	<div class="col-md-6">
+
+		<div class="forms">
+
+			<h2 class="page-title" n:block=title>Nástěnka <small>{$me->getFullNameWithNickname()}</small></h2>
+
 			<h3>Základní informace</h3>
 			{control frmUser:form}
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm-6">
+
 			<h3>Změna hesla</h3>
 			{control frmUserPassword}
+
 		</div>
-	</div>
-</div>
 
 
-{if $participation}
-	{if $participation->isRacer()}
+		{if $participation}
+			{if $participation->isRacer()}
+				<div>
+					<h3>Aktuální ročník</h3>
+
+					{define #member}
+					<div>
+						<h4>{$participation->getUser()->getFullNameWithNickname()}</h4>
+						<small>{$participation->getUser()->getEmail()}</small>
+						<div>Foto</div>
+						{if $participation->isPaid()}
+						Zaplaceno =)
+						{else}
+						Nezaplaceno !!!
+						<div>QR kod pro plabu</div>
+						{/if}
+					<div>
+					{/define}
+					<table class="table table-striped">
+						<tr>
+							<th colspan="2">Startovní číslo {$participation->getPair()->getStartNumber() ?: '<nepřiděleno>'}</th>
+						</tr>
+						<tr>
+							<td>
+								{include #member participation=>$participation}
+							</td>
+							<td>
+								{include #member participation=>$participation->getPair()->getOtherOne($participation)}
+							</td>
+						</tr>
+					</table>
+				</div>
+			{else}
+				V závodu jste registrovaný jako ServisTým.
+			{/if}
+		{else}
+			<h3>Vytvoř nový pár pro aktuální ročník</h3>
+			{control frmPairSendInvitation}
+		{/if}
+
+		<h3>Minulé ročníky</h3>
+
+		{define #member_small}
 		<div>
-			<h3>Aktuální ročník</h3>
+			<h5>{$participation->getUser()->getFullNameWithNickname()}</h5>
+			<small>{$participation->getUser()->getEmail()}</small>
+			<div>male Foto</div>
+		<div>
+		{/define}
 
-			{define #member}
-			<div>
-				<h4>{$participation->getUser()->getFullNameWithNickname()}</h4>
-				<small>{$participation->getUser()->getEmail()}</small>
-				<div>Foto</div>
-				{if $participation->isPaid()}
-				Zaplaceno =)
-				{else}
-				Nezaplaceno !!!
-				<div>QR kod pro plabu</div>
-				{/if}
-			<div>
-			{/define}
-			<table border="1">
+		{foreach $me->getParticipations() as $p}
+			<h4>ročník {$p->getRace()->getYear()} v {$p->getRace()->getLocation()}</h4>
+
+			<table class="table table-striped">
 				<tr>
-					<th colspan="2">Startovní číslo {$participation->getPair()->getStartNumber() ?: '<nepřiděleno>'}</th>
+					<th colspan="2">Startovní číslo {$p->getPair()->getStartNumber() ?: '<nepřiděleno>'}</th>
 				</tr>
 				<tr>
 					<td>
-						{include #member participation=>$participation}
+						{include #member_small participation=>$p}
 					</td>
 					<td>
-						{include #member participation=>$participation->getPair()->getOtherOne($participation)}
+						{include #member_small participation=>$p->getPair()->getOtherOne($p)}
 					</td>
 				</tr>
 			</table>
-		</div>
-	{else}
-		V závodu jste registrovaný jako ServisTým.
-	{/if}
-{else}
-	<h3>Vytvoř nový pár pro aktuální ročník</h3>
-	{control frmPairSendInvitation}
-{/if}
 
-<h3>Minulé ročníky</h3>
+		{/foreach}
 
-{define #member_small}
-<div>
-	<h5>{$participation->getUser()->getFullNameWithNickname()}</h5>
-	<small>{$participation->getUser()->getEmail()}</small>
-	<div>male Foto</div>
-<div>
-{/define}
+	</div>
 
-{foreach $me->getParticipations() as $p}
-	<h4>ročník {$p->getRace()->getYear()} v {$p->getRace()->getLocation()}</h4>
+	<div class="col-md-6">
 
-	<table border="1">
-		<tr>
-			<th colspan="2">Startovní číslo {$p->getPair()->getStartNumber() ?: '<nepřiděleno>'}</th>
-		</tr>
-		<tr>
-			<td>
-				{include #member_small participation=>$p}
-			</td>
-			<td>
-				{include #member_small participation=>$p->getPair()->getOtherOne($p)}
-			</td>
-		</tr>
-	</table>
+		{if $me->hasUnreadNotification()}<strong>Máte nepřečtené notifikace</strong>{/if}
 
-{/foreach}
+		<ul n:ifcontent>
+		{foreach $notifications as $notification}
+			<li>
+				<strong n:tag-if="$notification->isUnread()">
+					<div><small><em>{$notification->getCreatedAt()|date:'j.n.Y H:i:s'}</em></small></div>
 
-
-
-<div class="notifications">
-	{if $me->hasUnreadNotification()}<strong>Máte nepřečtené notifikace</strong>{/if}
-
-	<ul n:ifcontent>
-	{foreach $notifications as $notification}
-		<li>
-			<strong n:tag-if="$notification->isUnread()">
-				{if $notification->isType($notification::TYPE_INVITATION)}
-					{$notification->getSender()->getFullNameWithNickname()} by s tebou rád vytvořil závodní dvojici!<br />
-					<a n:href="acceptInvitation! $notification->getId()">Přijmout</a> | <a n:href="rejectInvitation! $notification->getId()">Odmítnout</a>
-				{elseif $notification->isType($notification::TYPE_INVITATION_ACCEPT)}
-					{$notification->getSender()->getFullNameWithNickname()} přijal tvoji nabídku na vytvoření dvojice!<br />
-					<a n:href="markAsRead! $notification->getId()">Beru na vědomí</a>
-				{elseif $notification->isType($notification::TYPE_INVITATION_REJECT)}
-					{$notification->getSender()->getFullNameWithNickname()} odmítnul tvoji nabídku na vytvoření dvojice =(<br />
-					<a n:href="markAsRead! $notification->getId()">Beru na vědomí</a>
-				{elseif $notification->isType($notification::TYPE_PAIR_CANCEL)}
-					{if $notification->getSender()}
-						{$notification->getSender()->getFullNameWithNickname()} zrušil vaši dvojici. Nyní se s tebou ná Z3V nepočítá.
-					{else}
-						Tvoje dvojice s {$notification->getMessage()} byla zrušena vedením závodu. Nyní se s tebou ná Z3V nepočítá.
+					{if $notification->isType($notification::TYPE_INVITATION)}
+						{$notification->getSender()->getFullNameWithNickname()} by s tebou rád vytvořil závodní dvojici!<br />
+						<a class="btn btn-xs btn-info" n:href="acceptInvitation! $notification->getId()">Přijmout</a>
+						<a class="btn btn-xs btn-warning" n:href="rejectInvitation! $notification->getId()">Odmítnout</a>
+					{elseif $notification->isType($notification::TYPE_INVITATION_ACCEPT)}
+						{$notification->getSender()->getFullNameWithNickname()} přijal tvoji nabídku na vytvoření dvojice!<br />
+						<a n:href="markAsRead! $notification->getId()">Beru na vědomí</a>
+					{elseif $notification->isType($notification::TYPE_INVITATION_REJECT)}
+						{$notification->getSender()->getFullNameWithNickname()} odmítnul tvoji nabídku na vytvoření dvojice =(<br />
+						<a n:href="markAsRead! $notification->getId()">Beru na vědomí</a>
+					{elseif $notification->isType($notification::TYPE_PAIR_CANCEL)}
+						{if $notification->getSender()}
+							{$notification->getSender()->getFullNameWithNickname()} zrušil vaši dvojici. Nyní se s tebou ná Z3V nepočítá.
+						{else}
+							Tvoje dvojice s {$notification->getMessage()} byla zrušena vedením závodu. Nyní se s tebou ná Z3V nepočítá.
+						{/if}
+						<a n:href="markAsRead! $notification->getId()">Beru na vědomí</a>
+					{elseif $notification->isType($notification::TYPE_MESSAGE)}
+						Nová zpráva od {if $notification->getSender()}{$notification->getSender()->getFullNameWithNickname()}{else}Informační systém{/if}
 					{/if}
-					<a n:href="markAsRead! $notification->getId()">Beru na vědomí</a>
-				{elseif $notification->isType($notification::TYPE_MESSAGE)}
-					Nová zpráva od {if $notification->getSender()}{$notification->getSender()->getFullNameWithNickname()}{else}Informační systém{/if}
-				{/if}
-				<div><small><em>{$notification->getCreatedAt()|date}</em></small></div>
-			</strong>
-		</li>
-	{/foreach}
-	</ul>
+				</strong>
+			</li>
+		{/foreach}
+		</ul>
+
+	</div>
+
 </div>
+
+
 
 {/block}
 

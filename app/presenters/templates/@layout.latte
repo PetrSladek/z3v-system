@@ -1,8 +1,279 @@
-{**
- * @param string   $basePath web base path
- * @param array    $flashes  flash messages
- *}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Z3V{ifset title} - {include title|striptags}{/ifset}</title>
 
+	<link href="{$basePath}/css/application.min.css" rel="stylesheet">
+
+	<link rel="stylesheet" href="//select2.github.io/dist/css/select2.min.css">
+	<link rel="stylesheet" href="http://select2.github.io/select2-bootstrap-theme/css/select2-bootstrap.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ladda-bootstrap/0.9.4/ladda-themeless.min.css">
+
+	{*<link href="/build/app.css?v=" rel="stylesheet" />*}
+
+    <link rel="shortcut icon" href="/../_wrap/img/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta charset="utf-8">
+</head>
+<body class="background-dark">
+    <div class="logo">
+        {*<h4><a n:href="Homepage:">Závod tří vrchů  <strong>Z3V</strong></a></h4>*}
+        <h4><a n:href="Homepage:"><img style="height: 40px" src="{$basePath}/images/logo.png" alt="Závod tří vrchů"/></a></h4>
+    </div>
+        <nav id="sidebar" class="sidebar nav-collapse collapse">
+        
+            <ul id="side-nav" class="side-nav">
+				<li n:class="$presenter->isLinkCurrent('Homepage:') ? active">
+					<a n:href="Homepage:" n:tag-if="$user->isAllowed('Homepage')"><i class="fa fa-home"></i> <span class="name">Hlavní strana</span></a>
+				</li>
+				<li n:class="$presenter->isLinkCurrent('Pairs:') ? active">
+					<a n:href="Pairs:" n:tag-if="$user->isAllowed('Pairs')"><i class="fa fa-group"></i> <span class="name">Dvojice</span></a>
+				</li>
+				<li n:class="$presenter->isLinkCurrent('ActualRace:') ? active">
+					<a n:href="ActualRace:" n:tag-if="$user->isAllowed('ActualRace')"><i class="fa fa-pencil"></i> <span class="name">Editace ročníku</span></a>
+				</li>
+				<li n:class="$presenter->isLinkCurrent('Checkpoints:') ? active">
+					<a n:href="Checkpoints:" n:tag-if="$user->isAllowed('Checkpoints')"><i class="fa fa-home"></i> <span class="name">Správa stanovišť</span></a>
+				</li>
+				<li n:class="$presenter->isLinkCurrent('Results:') ? active">
+					<a n:href="Results:" n:tag-if="$user->isAllowed('Results')"><i class="fa fa-area-chart"></i> <span class="name">Zobrazení výsledků</span></a>
+				</li>
+				<li n:class="$presenter->isLinkCurrent('Races:') ? active">
+					<a n:href="Races:" n:tag-if="$user->isAllowed('Races')"><i class="fa fa-home"></i> <span class="name">Ročníky</span></a>
+				</li>
+				<li n:class="$presenter->isLinkCurrent('Users:') ? active">
+					<a n:href="Users:" n:tag-if="$user->isAllowed('Users')"><i class="fa fa-user"></i> <span class="name">Závodníci</span></a>
+				</li>
+				<li n:class="$presenter->isLinkCurrent('Times:') ? active">
+					<a n:href="Times:" n:tag-if="$user->isAllowed('Times')"><i class="fa fa-home"></i> <span class="name">Časy</span></a>
+				</li>
+
+                <li class="visible-xs">
+                    <a n:href="Sign:out"><i class="fa fa-sign-out"></i> <span class="name">Odhlásit se</span></a>
+                </li>
+            </ul>
+
+        </nav>
+        <div class="wrap">
+        <header class="page-header">
+            <div class="navbar">
+                <ul class="nav navbar-nav navbar-right pull-right">
+                    <li class="visible-phone-landscape">
+                        <a href="#" id="search-toggle">
+                            <i class="fa fa-search"></i>
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" title="Messages" id="messages" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-comments"></i>
+                        </a>
+                        <ul id="messages-menu" class="dropdown-menu messages" role="menu">
+                            <li role="presentation">
+                                <a href="#" class="message">
+                                    <img src="/../_wrap/img/1.jpg" alt="">
+                                    <div class="details">
+                                        <div class="sender">Jane Hew</div>
+                                        <div class="text">
+                                            Hey, John! How is it going? ...
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#" class="message">
+                                    <img src="/../_wrap/img/2.jpg" alt="">
+                                    <div class="details">
+                                        <div class="sender">Alies Rumiancaŭ</div>
+                                        <div class="text">
+                                            I'll definitely buy this template
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#" class="message">
+                                    <img src="/../_wrap/img/3.jpg" alt="">
+                                    <div class="details">
+                                        <div class="sender">Michał Rumiancaŭ</div>
+                                        <div class="text">
+                                            Is it really Lore ipsum? Lore ...
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#" class="text-align-center see-all">
+                                    See all messages <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" title="8 support tickets" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-group"></i>
+                            <span class="count">8</span>
+                        </a>
+                        <ul id="support-menu" class="dropdown-menu support" role="menu">
+                            <li role="presentation">
+                                <a href="#" class="support-ticket">
+                                    <div class="picture">
+                                        <span class="label label-important"><i class="fa fa-bell-o"></i></span>
+                                    </div>
+                                    <div class="details">
+                                        Check out this awesome ticket
+                                    </div>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#" class="support-ticket">
+                                    <div class="picture">
+                                        <span class="label label-warning"><i class="fa fa-question-circle"></i></span>
+                                    </div>
+                                    <div class="details">
+                                        "What is the best way to get ...
+                                    </div>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#" class="support-ticket">
+                                    <div class="picture">
+                                        <span class="label label-success"><i class="fa fa-tag"></i></span>
+                                    </div>
+                                    <div class="details">
+                                        This is just a simple notification
+                                    </div>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#" class="support-ticket">
+                                    <div class="picture">
+                                        <span class="label label-info"><i class="fa fa-info-circle"></i></span>
+                                    </div>
+                                    <div class="details">
+                                        12 new orders has arrived today
+                                    </div>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#" class="support-ticket">
+                                    <div class="picture">
+                                        <span class="label label-important"><i class="fa fa-plus"></i></span>
+                                    </div>
+                                    <div class="details">
+                                        One more thing that just happened
+                                    </div>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#" class="text-align-center see-all">
+                                    See all tickets <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="hidden-xs dropdown">
+                        <a href="#" title="Account" id="account" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-user"></i>
+                        </a>
+                        <ul id="account-menu" class="dropdown-menu account" role="menu">
+                            <li role="presentation" class="account-picture">
+                                <img src="/../_wrap/img/2.jpg" alt="">
+                                {$me->getFullName()}
+                                <span n:ifcontent><br />{$me->getNickname()}</span>
+                            </li>
+                            <li role="presentation">
+                                <a href="form_account.html" class="link">
+                                    <i class="fa fa-user"></i>
+                                    Profile
+                                </a>
+                            </li>
+                            {*<li role="presentation">
+                                <a href="component_calendar.html" class="link">
+                                    <i class="fa fa-calendar"></i>
+                                    Calendar
+                                </a>
+                            </li>*}
+                            <li role="presentation">
+                                <a href="#" class="link">
+                                    <i class="fa fa-inbox"></i>
+                                    Inbox
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="visible-xs">
+                        <a href="#" class="btn-navbar" data-toggle="collapse" data-target=".sidebar" title="">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                    </li>
+                    <li class="hidden-xs"><a n:href="Sign:out"><i class="fa fa-sign-out"></i></a></li>
+                </ul>
+                <form id="search-form" class="navbar-form pull-right" role="search">
+                    <input type="search" class="form-control search-query" placeholder="Search...">
+                </form>
+                {*<div class="notifications pull-right">
+                    <div class="alert pull-right">
+                        <a href="#" class="close ml-xs" data-dismiss="alert">&times;</a>
+                        <i class="fa fa-info-circle mr-xs"></i> Check out Light Blue <a id="notification-link" href="#">settings</a> on the right!
+                    </div>
+                </div>*}
+            </div>
+        </header>
+        <div class="content container">
+
+        	<div n:foreach="$flashes as $flash" n:class="alert, $flash->type ? 'alert-'.$flash->type">{$flash->message}</div>
+			{include content}
+
+
+
+        </div>
+        <div class="loader-wrap hiding hide">
+            <i class="fa fa-circle-o-notch fa-spin"></i>
+        </div>
+    </div>
+	<!-- common libraries. required for every page-->
+	{*<script src="{$basePath}/lib/jquery/dist/jquery.min.js"></script>*}
+	{*<script src="{$basePath}/lib/jquery-pjax/jquery.pjax.js"></script>*}
+	{*<script src="{$basePath}/lib/bootstrap-sass-official/assets/javascripts/bootstrap.js"></script>*}
+	{*<script src="{$basePath}/lib/widgster/widgster.js"></script>*}
+	{*<script src="{$basePath}/lib/underscore/underscore.js"></script>*}
+
+	<!-- common application js -->
+	{*<script src="{$basePath}/js/app.js"></script>*}
+	{*<script src="{$basePath}/js/settings.js"></script>*}
+
+    <!-- page specific scripts -->
+	<!-- page libs -->
+
+	<!-- page application js -->
+
+	<!-- page template -->
+
+
+	{block scripts}
+	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script src="//nette.github.io/resources/js/netteForms.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.9.3/typeahead.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+	<script src="https://raw.githubusercontent.com/vojtech-dobes/nette.ajax.js/master/nette.ajax.js"></script>
+	<script src="https://raw.githubusercontent.com/smalot/bootstrap-datetimepicker/2.3.5/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="https://raw.githubusercontent.com/smalot/bootstrap-datetimepicker/2.3.5/js/locales/bootstrap-datetimepicker.cs.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/ladda-bootstrap/0.9.4/ladda.min.js"></script>
+
+	<script src="{$basePath}/js/main.js"></script>
+
+	<!--script src="{$basePath}/build/app.js" type="text/javascript"></script-->
+	{*<script src="//localhost:8888/build/app.js" type="text/javascript"></script>*}
+	{/block}
+</body>
+</html>
+
+{*
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,11 +284,9 @@
 	<link rel="stylesheet" href="{$basePath}/css/style.css">
 	<link rel="shortcut icon" href="{$basePath}/favicon.ico">
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-	{*<link href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />*}
 	<link rel="stylesheet" href="//select2.github.io/dist/css/select2.min.css">
 	<link rel="stylesheet" href="http://select2.github.io/select2-bootstrap-theme/css/select2-bootstrap.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ladda-bootstrap/0.9.4/ladda-themeless.min.css">
-	{*<link rel="stylesheet" href="https://raw.githubusercontent.com/smalot/bootstrap-datetimepicker/2.3.5/css/bootstrap-datetimepicker.min.css"> je v syle.css*}
 
 	<link href="/build/app.css?v=" rel="stylesheet" />
 
@@ -44,21 +313,22 @@
 	</div>
 
 	{block scripts}
-	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-	<script src="//nette.github.io/resources/js/netteForms.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha256-Sk3nkD6mLTMOF0EOpNtsIry+s1CsaqQC1rVLTAy+0yc= sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.9.3/typeahead.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
-	<script src="https://raw.githubusercontent.com/vojtech-dobes/nette.ajax.js/master/nette.ajax.js"></script>
-	<script src="https://raw.githubusercontent.com/smalot/bootstrap-datetimepicker/2.3.5/js/bootstrap-datetimepicker.min.js"></script>
-	<script src="https://raw.githubusercontent.com/smalot/bootstrap-datetimepicker/2.3.5/js/locales/bootstrap-datetimepicker.cs.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/ladda-bootstrap/0.9.4/ladda.min.js"></script>
+	<script src="{$basePath}///code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script src="{$basePath}///nette.github.io/resources/js/netteForms.min.js"></script>
+	<script src="{$basePath}/https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha256-Sk3nkD6mLTMOF0EOpNtsIry+s1CsaqQC1rVLTAy+0yc= sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+	<script src="{$basePath}///cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.9.3/typeahead.min.js"></script>
+	<script src="{$basePath}///cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+	<script src="{$basePath}/https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+	<script src="{$basePath}/https://raw.githubusercontent.com/vojtech-dobes/nette.ajax.js/master/nette.ajax.js"></script>
+	<script src="{$basePath}/https://raw.githubusercontent.com/smalot/bootstrap-datetimepicker/2.3.5/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="{$basePath}/https://raw.githubusercontent.com/smalot/bootstrap-datetimepicker/2.3.5/js/locales/bootstrap-datetimepicker.cs.js"></script>
+	<script src="{$basePath}/https://cdnjs.cloudflare.com/ajax/libs/ladda-bootstrap/0.9.4/ladda.min.js"></script>
 
-	<script src="{$basePath}/js/main.js"></script>
+	<script src="{$basePath}/{$basePath}/js/main.js"></script>
 
-	{*<script src="{$basePath}/build/app.js" type="text/javascript"></script>*}
-	<script src="//localhost:8888/build/app.js" type="text/javascript"></script>
+	<!--script src="{$basePath}/{$basePath}/build/app.js" type="text/javascript"></script-->
+	<script src="{$basePath}///localhost:8888/build/app.js" type="text/javascript"></script>
 	{/block}
 </body>
 </html>
+*}
