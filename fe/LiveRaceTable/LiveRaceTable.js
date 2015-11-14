@@ -80,24 +80,22 @@ export default class LiveRaceTable extends React.Component {
         };
 
         this.randomOrder = this.randomOrder.bind(this);
+        this.toFirst = this.toFirst.bind(this);
     }
 
-    randomOrder(e)  {
+    randomOrder()  {
 
         var pairs = this.state.pairs;
 
-        pairs = pairs.map(function(pair) {
-            pair.rank = Math.floor(Math.random() * pairs.length ) + 1;
-            return pair;
-        });
+        function shuffle(o){
+            for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+            return o;
+        }
 
-        pairs.sort((a,b) => {
-            return a.rank - b.rank
-        });
-
+        const rates = shuffle(Array.apply(null, Array(pairs.length)).map(function (_, i) {return i;}));
 
         pairs = pairs.map(function(pair, i) {
-            pair.rank = i + 1;
+            pair.rank = rates[i] + 1;
             return pair;
         });
 
@@ -106,18 +104,53 @@ export default class LiveRaceTable extends React.Component {
         })
     }
 
+    toFirst(id) {
+
+        var pairs = this.state.pairs;
+
+        // puvodni rank
+        const rank = pairs.find(pair => {return pair.id == id}).rank;
+
+        pairs = pairs.map(function(pair) {
+            if(pair.id == id)
+            {
+                pair.rank = 1;
+            }
+            else if(pair.rank < rank)
+            {
+                pair.rank++;
+            }
+            return pair;
+        });
+
+        this.setState({
+            pairs: pairs
+        });
+
+    }
+
+
+
     render() {
+
+        const style = {
+            position: 'relative',
+            height: this.state.pairs.length * 100,
+        };
+
         return (
             <div>
-                <table className="table table-tbody-striped">
+                <div style={style}>
                     {this.state.pairs.map(pair => {
                         return <LiveRaceTablePair
                                     members={pair.members}
                                     startNum={pair.startNum}
                                     rank={pair.rank}
+                                    id={pair.id}
+                                    toFirst={this.toFirst}
                                     key={pair.id} />;
                     })}
-                </table>
+                </div>
                 <button className="btn btn-info" onClick={this.randomOrder}>Náhodné pořadí</button>
             </div>
         );
