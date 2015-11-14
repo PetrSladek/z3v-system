@@ -3,13 +3,15 @@
 <head>
     <title>Z3V{ifset title} - {include title|striptags}{/ifset}</title>
 
+	{* TODO obe oddelat a pouzivat vsechno pres webpack *}
 	<link href="{$basePath}/css/application.min.css" rel="stylesheet">
+	<link href="{$basePath}/css/style.css" rel="stylesheet" />
 
 	<link rel="stylesheet" href="//select2.github.io/dist/css/select2.min.css">
 	<link rel="stylesheet" href="http://select2.github.io/select2-bootstrap-theme/css/select2-bootstrap.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ladda-bootstrap/0.9.4/ladda-themeless.min.css">
 
-	{*<link href="/build/app.css?v=" rel="stylesheet" />*}
+	<link n:if="!$devServer" href="{$basePath}/build/app.css?v=" rel="stylesheet" />
 
     <link rel="shortcut icon" href="/../_wrap/img/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -267,8 +269,12 @@
 
 	<script src="{$basePath}/js/main.js"></script>
 
-	<!--script src="{$basePath}/build/app.js" type="text/javascript"></script-->
-	{*<script src="//localhost:8888/build/app.js" type="text/javascript"></script>*}
+	{if $devServer}
+	<script src="//{$devServer}/build/app.js" type="text/javascript"></script>
+	{else}
+	<script src="{$basePath}/build/app.js" type="text/javascript"></script>
+	{/if}
+
 	{/block}
 </body>
 </html>

@@ -69,6 +69,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
         $this->template->me = $this->me;
         $this->template->race = $this->race;
+
+        // Bude se používat Webpack devServer pro JS a CSS?
+        $devServer = @$this->context->parameters['devServer'] ? : null;
+        $debugMode = $this->context->parameters['debugMode'];
+
+        $this->template->devServer = $debugMode && $devServer ? $devServer : null;
     }
 
 
